@@ -1554,6 +1554,63 @@ if(localStorage.getItem("flag_blur")!= null)
 				ctx.fill();
 			}
 
+			function make_buildings() {
+				ctx.strokeStyle="green"; // Green path
+
+				function make_building () {
+					function make_base(base_p, base_h, base_w) {
+						ctx.beginPath();
+						ctx.moveTo(base_p.x, base_p.y);
+						ctx.lineTo(base_p.x-base_w/2, base_p.y);
+						ctx.lineTo(base_p.x-base_w/2, base_p.y-base_h);
+						ctx.lineTo(+base_p.x++base_w/2, base_p.y-base_h);
+						ctx.lineTo(+base_p.x++base_w/2, base_p.y);
+						ctx.stroke();
+					}
+					function make_roof(roof_p, roof_h, roof_w) {
+						ctx.beginPath();
+						ctx.moveTo(roof_p.x, roof_p.y);
+						ctx.lineTo(roof_p.x-roof_w/2, roof_p.y);
+						ctx.lineTo(roof_p.x, roof_p.y-roof_h);
+						ctx.lineTo(+roof_p.x++roof_w/2, roof_p.y);
+						ctx.stroke();
+					}
+					function make_windows (wins_p, wins_h, wins_w) {
+						function make_window(win_p, win_h, win_w) {
+							ctx.beginPath();
+							ctx.moveTo(win_p.x-win_w/2, win_p.y);
+							ctx.lineTo(win_p.x-win_w/2, win_p.y-win_h);
+							ctx.lineTo(+win_p.x++win_w/2, win_p.y-win_h);
+							ctx.lineTo(+win_p.x++win_w/2, win_p.y);
+							ctx.stroke();
+						}
+						var w_amount_x= wins_w/30;
+						var w_amount_y=wins_h/50;
+
+						var w_coord_x = wins_w/w_amount_x;
+						var w_coord_y = wins_h/w_amount_y;
+
+						for (var i = 0; i < w_amount_x; i++) {
+							for (var j = 0; j < w_amount_y; j++) {
+								wins_p.set(wins_p.x-wins_w + w_coord_x*i,
+									wins_p.y-wins_h + w_coord_y*j, );
+								make_window(wins_p, 40, 20);
+							}
+						}
+
+					}
+					var p = new point();
+
+					p.set(c_width/2, c_height/3*2);
+					make_base(p, 200, 100);
+					make_windows(p, 200, 100);
+
+					p.set(c_width/2, c_height/3*2 - 100);
+					make_roof(p, 200, 100);
+				}
+				make_building();
+			}
+
 			function make_land(color1, color2){
 				var grd=ctx.createLinearGradient(0, c_height*4/5, 0, c_height);
 				grd.addColorStop(0, rgba_change(color1, -60));
@@ -2214,6 +2271,7 @@ if(localStorage.getItem("flag_blur")!= null)
 			/**/
 			draw_clouds();
 			draw_rocks();
+			//make_buildings();
 			print_hills(main_color1, main_color2);
 			if(randd(0,1)==1)
 			{
