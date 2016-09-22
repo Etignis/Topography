@@ -1163,7 +1163,7 @@ if(localStorage.getItem("flag_blur")!= null)
 			var cw_width = $("#c_work").width();
 			var cw_height = $("#c_work").height();
 
-			var sun_pos_h, sun_pos_hor, f_day=1;
+			var sun_pos_h, sun_pos_hor, f_day=1, f_desert=0;
 
 			// очищаем холст
 			ctx.clearRect(0, 0, c_width, c_height);
@@ -1238,6 +1238,7 @@ if(localStorage.getItem("flag_blur")!= null)
 				f_day=0;
 			}
 
+			if(randd(-3,1)>0) f_desert=1;
 
 			console.log("Выбрано: ["+i+"]"+"%c     " + "%c     ", "background: "+main_color1+";", "background: "+main_color2+";");
 
@@ -1490,8 +1491,16 @@ if(localStorage.getItem("flag_blur")!= null)
 						end.set(parseInt(+start.x+ +width), start.y);
 						ctx.moveTo(start.x, start.y);
 						ctx.bezierCurveTo(+start.x + +parseInt(width/4), start.y, +start.x + +parseInt(width/4), mid.y, mid.x, mid.y);
+						//ctx.stroke();
+						
 						// make cactus here
+						var k_cactus = ((range+1)*0.2).toFixed(1);
+						if(randd(0,1)>0 && f_desert==1)
+							make_cactus(mid, ~~((15-randd(-2,2))*k_cactus), ~~((50-randd(-20,20))*k_cactus));
+						//ctx.stroke();
+						
 						ctx.bezierCurveTo(+start.x + +parseInt(width/4*3), mid.y, +start.x + +parseInt(width/4*3), start.y, end.x, end.y);
+						//ctx.stroke();
 
 						if(end.x<c_width)
 							make_hill(end, height, width, range, color1, color2);
@@ -1998,7 +2007,9 @@ if(localStorage.getItem("flag_blur")!= null)
 								}
 							return arry;
 							}
-							/**/arry_right[0] = rock_start_point;
+							
+							/**/
+							arry_right[0] = rock_start_point;
 							var tr_x = ~~(+rock_start_point.x + +r_width/2);
 							var tr_y = ~~(+rock_start_point.y + +r_height);
 							tmp_p2.set(tr_x, tr_y);
@@ -2109,15 +2120,15 @@ if(localStorage.getItem("flag_blur")!= null)
 				if(mc_w === undefined)
 					mc_w = mc_2.x - mc_1.x;
 
-				var rl = 10;
+				var rl = ~~(mc_h/10);
 				var lb_line = mc_h/3*2 - randd(-rl, rl);
-				var t1_line = +mc_h + +randd(rl, 30);
+				var t1_line = +mc_h + +randd(rl, ~~(mc_h/5));
 				var t2_line = randd(-rl*2, rl*2);
 				var rb_line = mc_h/3*2 - randd(-rl, rl);
 				var f_line = ~~randd(rl, mc_h/4*5);
 
-				ctx.beginPath();
-				ctx.moveTo(mc_1.x, mc_1.y); //strt
+				//ctx.beginPath();
+				//ctx.moveTo(mc_1.x, mc_1.y); //strt
 					m_x = mc_1.x; m_y = mc_1.y - f_line;
 				ctx.lineTo(m_x, m_y); //fst line
 
@@ -2176,7 +2187,7 @@ if(localStorage.getItem("flag_blur")!= null)
 
 					m_y = mc_1.y;
 				ctx.lineTo(m_x, m_y); //right trunk line
-				ctx.stroke();
+				//ctx.stroke();
 			}
 
 			function draw_dr(){
@@ -2301,7 +2312,8 @@ if(localStorage.getItem("flag_blur")!= null)
 			draw_rocks();
 			//make_buildings();
 			print_hills(main_color1, main_color2);
-			if(randd(0,1)==1)
+			/**/
+			if(randd(0,1)==1 && f_desert!=1)
 			{
 				make_land(main_color1, main_color2);
 				make_forest(main_color1, main_color2);
