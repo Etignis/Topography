@@ -1563,25 +1563,25 @@ if(localStorage.getItem("flag_blur")!= null)
 						ctx.moveTo(base_p.x, base_p.y);
 						ctx.lineTo(base_p.x-base_w/2, base_p.y);
 						ctx.lineTo(base_p.x-base_w/2, base_p.y-base_h);
-						ctx.lineTo(+base_p.x++base_w/2, base_p.y-base_h);
-						ctx.lineTo(+base_p.x++base_w/2, base_p.y);
+						ctx.lineTo(+base_p.x+ +base_w/2, base_p.y - base_h);
+						ctx.lineTo(+base_p.x+ +base_w/2, base_p.y);
 						ctx.stroke();
 					}
 					function make_roof(roof_p, roof_h, roof_w) {
 						ctx.beginPath();
 						ctx.moveTo(roof_p.x, roof_p.y);
 						ctx.lineTo(roof_p.x-roof_w/2, roof_p.y);
-						ctx.lineTo(roof_p.x, roof_p.y-roof_h);
-						ctx.lineTo(+roof_p.x++roof_w/2, roof_p.y);
+						ctx.lineTo(roof_p.x, roof_p.y - roof_h);
+						ctx.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
 						ctx.stroke();
 					}
 					function make_windows (wins_p, wins_h, wins_w) {
 						function make_window(win_p, win_h, win_w) {
 							ctx.beginPath();
 							ctx.moveTo(win_p.x-win_w/2, win_p.y);
-							ctx.lineTo(win_p.x-win_w/2, win_p.y-win_h);
-							ctx.lineTo(+win_p.x++win_w/2, win_p.y-win_h);
-							ctx.lineTo(+win_p.x++win_w/2, win_p.y);
+							ctx.lineTo(win_p.x-win_w/2, win_p.y - win_h);
+							ctx.lineTo(+win_p.x+ +win_w/2, win_p.y - win_h);
+							ctx.lineTo(+win_p.x+ +win_w/2, win_p.y);
 							ctx.stroke();
 						}
 						var w_amount_x= wins_w/30;
@@ -1593,7 +1593,7 @@ if(localStorage.getItem("flag_blur")!= null)
 						for (var i = 0; i < w_amount_x; i++) {
 							for (var j = 0; j < w_amount_y; j++) {
 								wins_p.set(wins_p.x-wins_w + w_coord_x*i,
-									wins_p.y-wins_h + w_coord_y*j, );
+									wins_p.y-wins_h + w_coord_y*j);
 								make_window(wins_p, 40, 20);
 							}
 						}
@@ -1682,7 +1682,7 @@ if(localStorage.getItem("flag_blur")!= null)
 
 			function make_forest(cl1, cl2)
 			{
-				function make_tree_1(cl1, cl2, basis, width){
+				function make_tree_1(cl1, cl2, basis, width, f_leafs){
 					if(basis === undefined)
 					{
 						basis = new point();
@@ -1744,23 +1744,31 @@ if(localStorage.getItem("flag_blur")!= null)
 							ctx.lineTo(new_p.x, new_p.y);
 						}
 					}
-					function make_leafs (ls_p, ls_w) {
-						var l_p = new point();
-						l_p.set(ls_p.x, ls_p.y);
-						for (var i=0; i<6; i++) {
-							for (var j=0; j<11; j++) {
-								l_p.set(ls_p.x - ls_w/2 + +ls_w/6*i, ls_p.y + +ls_w/11*j)
-								make_leaf(l_p, 20);
+					function make_leafs (ls_p, ls_h) {
+					var l_p=new point();
+					var ls_w=500;
+						for (var i=0; i<11; i++) {
+							for (var j=0; j<6; j++) {
+								//l_p.set(ls_p.x - (ls_h/2)/(i*0.4) + +ls_h/6*i/(i*0.4) - randd(-1,1)*i*15, ls_p.y + +ls_h/11*j)
+								var j_c = ~~((ls_w/6)* (j+1));
+								var k = ~~((i*0.8)+1);
+								l_p.set(ls_p.x -10 - (ls_w/2)/k + +(j_c)/k, ls_p.y + +(ls_h/11)*i);
+								make_leaf(l_p, 70);
 							}
 						}
 					}
 
 					function make_leaf (l_p, l_w) {
+						l_p.set(l_p.x-randd(-10,10), l_p.y-randd(-30,30));
+						l_w = l_w - randd(-5,5)*3;
 						ctx.beginPath();
-						ctx.moveTo(l_p.x, l_p.+y);
+						ctx.moveTo(l_p.x, l_p.y);
 						ctx.lineTo(l_p.x-l_w/2, l_p.y + +l_w/2);
-						ctx.lineTo(+l_p.x++l_w/2, l_p.y + +l_w/2);
-						ctx.stroke();
+						ctx.lineTo(+l_p.x+ +l_w/2, l_p.y + +l_w/2);
+						ctx.lineTo(l_p.x, l_p.y);
+						//ctx.stroke();
+						ctx.fillStyle = rgba_change(main_color1, randd(-15,15), randd(3,10)*0.1, -randd(1,5)*3, randd(1,5)*3, -randd(1,5)*3);
+						ctx.fill();
 					}
 
 					ctx.beginPath();
@@ -1781,11 +1789,11 @@ if(localStorage.getItem("flag_blur")!= null)
 					tree.addColorStop(1, rgba_change(cl2, 30, 0));
 					ctx.fillStyle = tree;
 					ctx.fill();
-
-					make_leafs(pnt, 200);
+					if(f_leafs==1)
+						make_leafs(pnt, 100);
 				}
 
-
+				var f_leafs = (randd(-1,1)>0)?1:0;
 				var s_max = randd(2, 6), d_max = randd(7, 13);
 				//var s_max = 3, d_max = 4;
 				var tree_point = new point();
@@ -1809,7 +1817,7 @@ if(localStorage.getItem("flag_blur")!= null)
 						var rnd = randd(0,5);
 						if(rnd<2)
 						{
-							make_tree_1(cl1, cl2, tree_point, wid);
+							make_tree_1(cl1, cl2, tree_point, wid, f_leafs);
 							tree_point.x-=randd(90, 150);
 							tree_point.y-=-15;
 							make_cloud(tree_point, randd(80, 120), randd(250, 350), rgba_change(cl1, -30, 1));
