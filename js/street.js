@@ -1744,6 +1744,24 @@ if(localStorage.getItem("flag_blur")!= null)
 							ctx.lineTo(new_p.x, new_p.y);
 						}
 					}
+					function make_leafs (ls_p, ls_w) {
+						var l_p = new point();
+						l_p.set(ls_p.x, ls_p.y);
+						for (var i=0; i<6; i++) {
+							for (var j=0; j<11; j++) {
+								l_p.set(ls_p.x - ls_w/2 + +ls_w/6*i, ls_p.y + +ls_w/11*j)
+								make_leaf(l_p, 20);
+							}
+						}
+					}
+
+					function make_leaf (l_p, l_w) {
+						ctx.beginPath();
+						ctx.moveTo(l_p.x, l_p.+y);
+						ctx.lineTo(l_p.x-l_w/2, l_p.y + +l_w/2);
+						ctx.lineTo(+l_p.x++l_w/2, l_p.y + +l_w/2);
+						ctx.stroke();
+					}
 
 					ctx.beginPath();
 					var root_x1 = ~~(basis.x-width/2-root);
@@ -1763,6 +1781,8 @@ if(localStorage.getItem("flag_blur")!= null)
 					tree.addColorStop(1, rgba_change(cl2, 30, 0));
 					ctx.fillStyle = tree;
 					ctx.fill();
+
+					make_leafs(pnt, 200);
 				}
 
 
