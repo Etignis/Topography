@@ -1200,8 +1200,8 @@ if(localStorage.getItem("flag_blur")!= null)
 			'rgba(255, 246, 102, 1)',
 			'rgba(180, 207, 234, 1)',
 			'rgba(214, 224, 225, 1)',
-			'rgba(133, 182, 182, 1)',
 			'rgba(79, 54, 16, 1)',
+			'rgba(133, 182, 182, 1)',
 			'rgba(92, 28, 1, 1)',
 			'rgba(131, 70, 93, 1)'
 			];
@@ -1269,7 +1269,6 @@ if(localStorage.getItem("flag_blur")!= null)
 				//var i = randd(0, colors.length/2)
 				print_sky(cl1, cl2);
 			}
-
 
 			function make_sun(){
 				function print_sun(pos, radius, color)
@@ -1399,7 +1398,7 @@ if(localStorage.getItem("flag_blur")!= null)
 			}
 
 		    /// do not insert in...
-			function make_cloud(pos, height, width, color){
+			function make_cloud(pos, height, width, color) {
 				var count = randd(3,7);
 				var radius, cloud;
 				if(height === undefined)
@@ -1446,7 +1445,8 @@ if(localStorage.getItem("flag_blur")!= null)
 					ctx.fillRect(r_x1, r_y1, r_w, r_h);
 				}
 			}
-			function draw_clouds(){
+			
+			function draw_clouds() {
 				var cloud_pos = new point();
 				var w, h, x, y, n_max=randd(2,6), m_max=randd(4,29);
 				for(var n = 0; n<n_max; n++)
@@ -1465,7 +1465,7 @@ if(localStorage.getItem("flag_blur")!= null)
 				}
 			}
 
-			function print_hills(color1, color2, width, height){
+			function print_hills(color1, color2, width, height) {
 				if(color1 === undefined)
 					color1 = 'rgba(246, 178, 139, 1)';
 				if(color2 === undefined)
@@ -1547,7 +1547,7 @@ if(localStorage.getItem("flag_blur")!= null)
 				}
 			}
 
-			function make_cave(){
+			function make_cave() {
 				ctx.beginPath();
 				ctx.moveTo(0,0);
 				ctx.lineTo(c_width, 0);
@@ -1630,7 +1630,7 @@ if(localStorage.getItem("flag_blur")!= null)
 				make_building();
 			}
 
-			function make_land(color1, color2){
+			function make_land(color1, color2) {
 				var grd=ctx.createLinearGradient(0, c_height*4/5, 0, c_height);
 				grd.addColorStop(0, rgba_change(color1, -60));
 				grd.addColorStop(1, rgba_change(color2, -60));
@@ -1639,8 +1639,7 @@ if(localStorage.getItem("flag_blur")!= null)
 				ctx.fillRect(0,c_height*4/5,c_width,c_height/5);
 			}
 
-			function print_stars(ps_color)
-			{
+			function print_stars(ps_color) {
 				if(ps_color === undefined)
 					var ps_color = "rgba(255,255,255,1)";
 
@@ -1698,9 +1697,7 @@ if(localStorage.getItem("flag_blur")!= null)
 				}
 			}
 
-
-			function make_forest(cl1, cl2)
-			{
+			function make_forest(cl1, cl2) {
 				function make_tree_1(cl1, cl2, basis, width, f_leafs){
 					if(basis === undefined)
 					{
@@ -1768,11 +1765,14 @@ if(localStorage.getItem("flag_blur")!= null)
 					var ls_w=500;
 						for (var i=0; i<11; i++) {
 							for (var j=0; j<6; j++) {
-								//l_p.set(ls_p.x - (ls_h/2)/(i*0.4) + +ls_h/6*i/(i*0.4) - randd(-1,1)*i*15, ls_p.y + +ls_h/11*j)
-								var j_c = ~~((ls_w/6)* (j+1));
-								var k = ~~((i*0.8)+1);
-								l_p.set(ls_p.x -10 - (ls_w/2)/k + +(j_c)/k, ls_p.y + +(ls_h/11)*i);
-								make_leaf(l_p, 70);
+								if(randd(0, 3)>i) {
+									//l_p.set(ls_p.x - (ls_h/2)/(i*0.4) + +ls_h/6*i/(i*0.4) - randd(-1,1)*i*15, ls_p.y + +ls_h/11*j)
+									var j_c = ~~((ls_w/6)* (j+1));
+									var k = ~~((i*0.6)+1);
+									l_p.set(ls_p.x -10 - (ls_w/2)/k + +(j_c)/k, ls_p.y + +(ls_h/11)*i - randd(3,3)/k);
+								
+									make_leaf(l_p, 70);
+								}
 							}
 						}
 					}
@@ -1809,7 +1809,7 @@ if(localStorage.getItem("flag_blur")!= null)
 					ctx.fillStyle = tree;
 					ctx.fill();
 					if(f_leafs==1)
-						make_leafs(pnt, 100);
+						make_leafs(pnt, 200);
 				}
 
 				var f_leafs = (randd(-1,1)>0)?1:0;
