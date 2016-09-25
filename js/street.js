@@ -53,8 +53,7 @@ if(localStorage.getItem("flag_blur")!= null)
 
 	///////////////////
 
-	function make_street()
-	{
+	function make_street() {
 		var shops = "Оружейная, Мясная лавка, Лавка зелий, Кафе, Цветочная лавка, Портной, Хиромант, Молочный магазин, Сгорел!, Сапожник, Маг Иллюзионист, Лавка диковинок, Тату и Пирсинг, Мебельщик, Карты и наборы путешественников, Луки и стрелы, Винзавод, Строительные материалы, Свечи и Ароматы, Часовщик, Туристическое снаряжение, Бакалейная лавка, Женская обувь и Платья, Кондитерская, Пивоварня, Лавка алхимика, Лавка Травника, Лавка Пекаря, Книжная лавка, Храм, Оружейная лавка, Лавка старьевщика, Цирюльник, Гончарная мастерская, Мастерская скорняка, Мастерская каменщика, Лавка тканей, Лавка шляпника, Рыбная лавка, Мастерская художника, Мастерская скульптора, Мастерская краснодеревщика, Лавка зеленщика, Ломбард, Лавка красильщика, Мастерская переписчика, Столярная мастерская, Плотницкая мастерская, Мастерская слесаря, Лавка жестянщика";
 		var houses = "Частный дом";
 		var taverns = "Таверна";
@@ -141,8 +140,7 @@ if(localStorage.getItem("flag_blur")!= null)
 			}
 		return ret;
 	}
-	function make_town()
-	{
+	function make_town() {
 		var name_line_1_he = "Ясный, Светлый, Дальний, Старый, Большой, Малый, Новый, Ближний, Темный, Стылый, Быков, Кривой, Крутой, Лысый, Верхний, Веселый, Степной, Лесной, Сухой, Лебяжий, Песчаный";
 		var name_line_1_she = "Ясная, Светлая, Дальняя, Старая, Большая, Малая, Новая, Ближняя, Темная, Стылая, Быкова, Кривая, Крутая, Лысая, Верхняя, Веселая, Степная, Лесная, Сухая, Лебяжья, Песчаная";
 		var name_line_1_it = "Ясное, Светлое, Дальнее, Старое, Большое, Малое, Новое, Ближнее, Темное, Стылое, Быково, Кривое, Крутое, Лысое, Верхнее, Хреновое, Веселое, Степное, Лесное, Сухое, Лебяжье, Полное, Песчаное, Забавное, Круглое";
@@ -290,8 +288,7 @@ if(localStorage.getItem("flag_blur")!= null)
 		return ret;
 	}
 
-	function make_texture(color)
-		{
+	function make_texture(color) {
 		var deg = randd(-9,9);
 		var tx = randd(1,19);
 		var ty = randd(1,19);
@@ -359,17 +356,22 @@ if(localStorage.getItem("flag_blur")!= null)
 		var b_land = randd(1,4);
 		}
 
-	function point(){
-		this.x=0;
-		this.y=0;
+	function point(x, y) {
+		if(x != undefined)
+			this.x=x;
+		else
+			this.x=0;
+		if(y != undefined)
+			this.y=y;
+		else
+			this.y=0;
 	}
-	point.prototype.set = function(x,y){
+	point.prototype.set = function(x,y) {
 		this.x=parseInt(x);
 		this.y=parseInt(y);
 	}
 
-	function make_back()
-		{
+	function make_back() {
 		//$("#background").css({'background': 'url("img/f1.jpg") center center', 'background-size': 'cover', "opacity": ".8"});
 
 			var b_width = $("#background").width();
@@ -1068,8 +1070,7 @@ if(localStorage.getItem("flag_blur")!= null)
 
 
 
-	function rgba_change(color, num, alpha, c_r, c_g, c_b)
-	{
+	function rgba_change(color, num, alpha, c_r, c_g, c_b) {
 		if(alpha<0)
 			alpha*=-1;
 		if(alpha === undefined || alpha>1)
@@ -1108,8 +1109,7 @@ if(localStorage.getItem("flag_blur")!= null)
 		return color;
 	}
 
-	function rgba_average(color1, color2, prc)
-	{
+	function rgba_average(color1, color2, prc) {
 		if(prc === undefined|| prc<1 || prc>9)
 			prc = 5;
 		var cl1 = color1.match(/([0-9\s,\.]+)/i);
@@ -1138,8 +1138,7 @@ if(localStorage.getItem("flag_blur")!= null)
 		return color;
 	}
 
-	function make_back_2()
-		{
+	function make_back_2() {
 		//$("#background").css({'background': 'url("img/f1.jpg") center center', 'background-size': 'cover', "opacity": ".8"});
 
 		var b_width = $("#background").width();
@@ -1163,30 +1162,14 @@ if(localStorage.getItem("flag_blur")!= null)
 			var cw_width = $("#c_work").width();
 			var cw_height = $("#c_work").height();
 
-			var sun_pos_h, sun_pos_hor, f_day=1, f_desert=0;
+			var sun_pos_h, sun_pos_hor, f_day=1, f_desert=0, f_cave=0;
 
 			// очищаем холст
 			ctx.clearRect(0, 0, c_width, c_height);
 			c_work.clearRect(0, 0, cw_width, cw_height);
 
 			var r_line = rand_line();
-			/*/
-			var colors = ['rgba(97, 202, 188, 1)',
-			'rgba(242, 246, 221, 1)',
-			'rgba(254, 224, 152, 1)',
-			'rgba(253, 243, 194, 1)',
-			'rgba(195, 177, 189, 1)',
-			'rgba(253, 220, 211, 1)',
-			'rgba(244, 169, 156, 1)',
-			'rgba(236, 177, 111, 1)',
-			'rgba(177, 50, 59, 1)',
-			'rgba(255, 246, 102, 1)',
-			'rgba(180, 207, 234, 1)',
-			'rgba(214, 224, 225, 1)',
-			'rgba(70, 57, 101, 1)',
-			'rgba(142, 172, 236, 1)',
-			];
-			/**/
+			
 			var colors_day = [
 			'rgba(97, 202, 188, 1)',
 			'rgba(242, 246, 221, 1)',
@@ -1249,8 +1232,56 @@ if(localStorage.getItem("flag_blur")!= null)
 			}
 
 			if(randd(-3,1)>0) f_desert=1;
+			if(randd(-7,1)>0) f_cave=1;
 
 			console.log("Выбрано: ["+i+"]"+"%c     " + "%c     ", "background: "+main_color1+";", "background: "+main_color2+";");
+			
+			function mountain_point(p1,p2, randp) {
+				//console.log(Math.pow((p2.x - p1.x),2));
+				//console.log(Math.pow((p2.y - p1.y),2));
+				//console.log(Math.sqrt(Math.pow((p2.x - p1.x),2)+Math.pow((p2.y - p1.y),2))/2);
+				//console.log(Math.pow((p2.x−p1.x), 2));
+				//console.log(Math.pow((p2.y−p1.y), 2));
+				var rr=randp;
+				if (!(randp >0 && randp<100)) {
+					rr = parseInt(Math.sqrt(Math.pow((p2.x - p1.x),2)+Math.pow((p2.y - p1.y),2))/10);
+				}
+
+					//var rr=parseInt(Math.sqrt(Math.pow((p2.x - p1.x),2)+Math.pow((p2.y - p1.y),2))/5);
+					x_r=randd(-rr,rr);
+					y_r=randd(-rr,rr);
+
+					pn = new point();
+					pn.x = parseInt((p1.x+p2.x)/2-x_r);
+					pn.y = parseInt((p1.y+p2.y)/2-y_r);
+					//console.log("pn.x: "+pn.x);
+					//	console.log("pn.y: "+pn.y);
+					return pn;
+			}
+
+			function make_line(arry, max_i) {
+				if(max_i === undefined)
+					max_i = 7;
+				var arry2=[];
+				ar_l=0;
+				for(p=0; p < max_i; p++)
+					{
+					ar_l=0;
+					for(var key in arry){
+						ar_l++;
+					}
+					arry2.push(arry[0]);
+					for(k=0; k < ar_l-1; k++)
+					{
+						arry2.push(mountain_point(arry[k], arry[(k+1)], 5));
+						arry2.push(arry[k+1]);
+					}
+					arry=[];
+					arry=arry2;
+					arry2=[];
+					}
+				return arry;
+				}
 
 			function make_sky(cl1, cl2){
 				function print_sky(color1, color2){
@@ -1548,29 +1579,55 @@ if(localStorage.getItem("flag_blur")!= null)
 			}
 
 			function make_cave() {
-				ctx.beginPath();
-				ctx.moveTo(0,0);
-				ctx.lineTo(c_width, 0);
-				ctx.lineTo(c_width, c_height);
-				ctx.lineTo(0, c_height);
-				ctx.lineTo(0, 0);
+				function make_cave_line(cave_k) {
+					// count columns amount
+					cave_k=cave_k*0.2;
+					var height_k = 40*cave_k;
+					var columt_center_distance = 90*cave_k;
+					var columns_amount = ~~(c_width/columt_center_distance);
+					columt_center_distance= ~~(c_width/columns_amount);
+					var up_arr=[], down_arr=[]; 
+					for(var i=0; i < (c_width-columt_center_distance*2)/columt_center_distance; i++) {
+						up_arr[i] = new point((i+1)*columt_center_distance, c_height/2-randd(c_height/6*cave_k, c_height/2*cave_k));
+						down_arr[i] = new point((i+1)*columt_center_distance, c_height/2-randd(c_height/6*cave_k, c_height/2*cave_k)*-1);					
+					}
+					var main_arr = up_arr.reverse().concat(new point(columt_center_distance/2-randd(0,height_k), c_height/2-randd(-height_k,height_k)), down_arr, new point(c_width-columt_center_distance/2-randd(-height_k,0), c_height/2-randd(-height_k,height_k)), up_arr[0]);
+					
+					
+					main_arr = make_line(main_arr, 2);
 
-				ctx.moveTo(c_width/2, 0);
-				ctx.lineTo(0, c_height/2);
-				ctx.lineTo(c_width/2, c_height);
-				ctx.lineTo(c_width, c_height/2);
-				ctx.lineTo(c_width/2, 0);
+					ctx.strokeStyle="green";
+					ctx.lineWidth=5;
+					/**/
+					ctx.beginPath();
+					ctx.moveTo(0,0);
+					ctx.lineTo(c_width, 0);
+					ctx.lineTo(c_width, c_height);
+					ctx.lineTo(0, c_height);
+					ctx.lineTo(0, 0);
+					ctx.closePath();
+					
+					
+					ctx.moveTo(main_arr[0].x, main_arr[0].y);
+					for (var i = 1; i < main_arr.length; i++) {
+						ctx.lineTo(main_arr[i].x, main_arr[i].y);
+						//ctx.stroke();
+					}
+					//ctx.lineTo(main_arr[0].x, main_arr[0].y);
+					//ctx.stroke();
+						
+					var lingrad = ctx.createLinearGradient(0, 0, 0, c_height );
 
+					lingrad.addColorStop(0, rgba_change(main_color1, -(~~(150*cave_k)))); 
+					lingrad.addColorStop(1, rgba_change(main_color2, -(~~(150*cave_k))));
+					ctx.fillStyle = lingrad;
 
-				var lingrad = ctx.createLinearGradient(0, +c_height/3 + +offset,0, +c_height + +offset);
-				/*var color1=colors[i];
-				var color2=colors[+i + +1];*/
-
-				lingrad.addColorStop(0, color1);
-				lingrad.addColorStop(1, color2);
-				ctx.fillStyle = lingrad;
-
-				ctx.fill();
+					ctx.fill();
+					/**/
+				}
+				var amount= randd(1,5);
+				for(var t=amount; t<8; t++)
+				 make_cave_line(t);				
 			}
 
 			function make_buildings() {
@@ -1852,9 +1909,7 @@ if(localStorage.getItem("flag_blur")!= null)
 				}
 			}
 
-
-			function draw_rocks()
-			{
+			function draw_rocks()	{
 				function make_rock(mr_point, mr_height, mr_width, mr_color1, mr_color2)
 					{
 					function print_rock(color1, color2, r_pos, r_height, r_width){
@@ -2200,120 +2255,6 @@ if(localStorage.getItem("flag_blur")!= null)
 				//ctx.stroke();
 			}
 
-			function draw_dr(){
-				function print_dr_cactus(){
-					/**
-					 * @param {point} start point
-					 * @param {number} main diametr
-					 * @param {number} main height
-					 *
-					 */
-					 /*/
-					function make_cactus(mc_p1, mc_dt, mc_h){
-						var mc_1 = new point(), mc_2 = new point(), mc_w;
-						var db, rb;
-						var f_direction = 1;
-						var gap = 20;
-						var m_x, m_y, bc1_x, bc1_y, bc2_x, bc2_y;
-
-						if(mc_dt === undefined) // diameter trunk
-							mc_dt = 20;
-						db = ~~(mc_dt/3*2);     // inner diameter branch
-						rb = ~~(db/5*2);        // outer radius branch
-
-						if(mc_p1 === undefined)
-							mc_1.set(100, 200);
-						else
-							mc_1.set(mc_p1.x, mc_p1.y)
-
-						mc_2.set(+mc_1.x + +mc_dt, mc_1.y)
-
-						if(mc_h === undefined)
-							mc_h = 50;
-						if(mc_w === undefined)
-							mc_w = mc_2.x - mc_1.x;
-
-						var rl = 10;
-						var lb_line = mc_h/3*2 - randd(-rl, rl);
-						var t1_line = +mc_h + +randd(rl, 30);
-						var t2_line = randd(-rl*2, rl*2);
-						var rb_line = mc_h/3*2 - randd(-rl, rl);
-						var f_line = ~~randd(rl, mc_h/4*5);
-
-						ctx.beginPath();
-						ctx.moveTo(mc_1.x, mc_1.y); //strt
-							m_x = mc_1.x; m_y = mc_1.y - f_line;
-						ctx.lineTo(m_x, m_y); //fst line
-
-							bc1_x = m_x - db -rb; bc1_y = m_y;
-							bc2_x = bc1_x; bc2_y = bc1_y;
-							m_x = m_x - db -rb; m_y = m_y  - db -rb;
-						ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch outer arc
-
-							m_y = m_y-lb_line;
-						ctx.lineTo(m_x, m_y); //left branch left line
-
-							bc1_x = m_x; bc1_y = m_y - db/3*2;
-							bc2_x = +m_x + +db; bc2_y = bc1_y;
-							m_x = +m_x + +db;
-						ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch top arc
-
-							m_y = +m_y + +lb_line;
-						ctx.lineTo(m_x, m_y); //left branch right line
-
-							bc1_x = m_x; bc1_y = +m_y + +rb;
-							bc2_x = bc1_x; bc2_y = bc1_y
-							m_x = +m_x + +rb; m_y = +m_y + +rb;
-						ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch inner arc
-
-							m_y = m_y -t1_line;
-						ctx.lineTo(m_x, m_y); //trunk left line
-
-							bc1_x = m_x; bc1_y = m_y - mc_dt/3*2;
-							bc2_x = +m_x + +mc_dt; bc2_y = bc1_y;
-							m_x = +m_x + +mc_dt;
-						ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // trunk top arc
-
-							m_y = +m_y + +t1_line-t2_line;
-						ctx.lineTo(m_x, m_y); //trunk right line
-
-							bc1_x = +m_x + rb; bc1_y = m_y;
-							bc2_x = bc1_x; bc2_y = bc1_y;
-							m_x = +m_x + +rb; m_y = m_y - rb
-						ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch inner arc
-
-							m_y = m_y -rb_line;
-						ctx.lineTo(m_x, m_y); //right branch left line
-
-							bc1_x = m_x; bc1_y = m_y - db/3*2;
-							bc2_x = +m_x + +db; bc2_y = bc1_y;
-							m_x = +m_x + +db;
-						ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch top arc
-
-							m_y = +m_y + +rb_line;
-						ctx.lineTo(m_x, m_y); //right branch right line
-
-							bc1_x = m_x; bc1_y = +m_y + +rb + +db;
-							bc2_x = bc1_x; bc2_y = bc1_y;
-							m_x = m_x - rb - db; m_y = +m_y + +rb + +db
-						ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch outer arc
-
-							m_y = mc_1.y;
-						ctx.lineTo(m_x, m_y); //right trunk line
-						ctx.stroke();
-					}
-					/**/
-					var p = new point();
-					p.set(100, 200);
-					make_cactus(p, 20);
-					p.set(200, 200);
-					make_cactus(p, 30);
-					p.set(300, 200);
-					make_cactus(p, 20);
-				}
-				print_dr_cactus();
-			}
-
 			make_sky(main_color1, main_color2);
 			print_stars(main_color2);
 			var sun_color = make_sun();
@@ -2323,15 +2264,17 @@ if(localStorage.getItem("flag_blur")!= null)
 			//make_buildings();
 			print_hills(main_color1, main_color2);
 			/**/
-			if(randd(0,1)==1 && f_desert!=1)
+			if(randd(0,1)==1 && f_desert!=1 && f_cave!=1)
 			{
 				make_land(main_color1, main_color2);
 				make_forest(main_color1, main_color2);
 			}
-			// make_cave();
+			if (f_cave==1) {				
+				make_cave();
+			}
 
 			/**/
-			//draw_dr();
+			
 			return {
 				clr1: main_color1,
 				clr2: main_color2
@@ -2357,6 +2300,7 @@ if(localStorage.getItem("flag_blur")!= null)
 		if(bg_blur ==1)
 			$("#background").attr('class', 'blur');
 	}
+	
 	$(window).resize(function(){
 		make_back_2();
 	});
