@@ -488,7 +488,9 @@ if(localStorage.getItem("flag_blur")!= null)
 			'rgba(79, 54, 16, 1)',
 			'rgba(133, 182, 182, 1)',
 			'rgba(92, 28, 1, 1)',
-			'rgba(131, 70, 93, 1)'
+			'rgba(131, 70, 93, 1)',
+			'rgba(255, 202, 40, 1)',
+			'rgba(62, 39, 35, 1)'
 			];
 			var colors_night = [
 			'rgba(70, 57, 101, 1)',
