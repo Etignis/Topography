@@ -489,8 +489,8 @@ if(localStorage.getItem("flag_blur")!= null)
 			'rgba(133, 182, 182, 1)',
 			'rgba(92, 28, 1, 1)',
 			'rgba(131, 70, 93, 1)',
-			'rgba(255, 202, 40, 1)',
-			'rgba(62, 39, 35, 1)'
+			'rgba(62, 39, 35, 1)',
+			'rgba(255, 202, 40, 1)'
 			];
 			var colors_night = [
 			'rgba(70, 57, 101, 1)',
@@ -939,73 +939,103 @@ if(localStorage.getItem("flag_blur")!= null)
 			}
 
 			function make_buildings() {
-				ctx.strokeStyle="green"; // Green path
+				if(randd(-5,1)>0) {
+					ctx.strokeStyle = "green"; // Green path
+					ctx.fillStyle = rgba_change(main_color1, -60);
+					function make_building (building_base, k_height, k_size) {
+						var base = new point();
+						if (building_base == undefined) {
+							base.set(c_width/2, c_height/3*2);
+						} else {
+							base.set(building_base.x, building_base.y);
+						}
 
-				function make_building (building_base) {
-					var base = new point();
-					if (building_base == undefined) {
-						base.set(c_width/2, c_height/3*2);
-					} else {
-						base.set(building_base.x, building_base.y);
-					}
-
-					function make_base(base_p, base_h, base_w) {
-						ctx.beginPath();
-						ctx.moveTo(base_p.x, base_p.y);
-						ctx.lineTo(base_p.x-base_w/2, base_p.y);
-						ctx.lineTo(base_p.x-base_w/2, base_p.y-base_h);
-						ctx.lineTo(+base_p.x+ +base_w/2, base_p.y - base_h);
-						ctx.lineTo(+base_p.x+ +base_w/2, base_p.y);
-						ctx.stroke();
-					}
-					function make_roof(roof_p, roof_h, roof_w) {
-						ctx.beginPath();
-						ctx.moveTo(roof_p.x, roof_p.y);
-						ctx.lineTo(roof_p.x-roof_w/2, roof_p.y);
-						ctx.lineTo(roof_p.x, roof_p.y - roof_h);
-						ctx.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
-						ctx.stroke();
-					}
-					function make_windows (wins_p, wins_h, wins_w) {
-						function make_window(win_p, win_h, win_w) {
+						function make_base(base_p, base_w, base_h) {
+							ctx.fillStyle = rgba_change(main_color1, -60);
 							ctx.beginPath();
-							ctx.moveTo(win_p.x-win_w/2, win_p.y);
-							ctx.lineTo(win_p.x-win_w/2, win_p.y - win_h);
-							ctx.lineTo(+win_p.x+ +win_w/2, win_p.y - win_h);
-							ctx.lineTo(+win_p.x+ +win_w/2, win_p.y);
-							ctx.stroke();
+							ctx.moveTo(base_p.x, base_p.y);
+							ctx.lineTo(base_p.x-base_w/2, base_p.y);
+							ctx.lineTo(base_p.x-base_w/2, base_p.y-base_h);
+							ctx.lineTo(+base_p.x+ +base_w/2, base_p.y - base_h);
+							ctx.lineTo(+base_p.x+ +base_w/2, base_p.y);
+							ctx.lineTo(base_p.x, base_p.y);
+							
+							//ctx.stroke();
+							ctx.fill();
 						}
-						var w_amount_x= wins_w/30;
-						var w_amount_y=wins_h/50;
-
-						var w_coord_x = wins_w/w_amount_x;
-						var w_coord_y = wins_h/w_amount_y;
-
-						for (var i = 0; i < w_amount_x; i++) {
-							for (var j = 0; j < w_amount_y; j++) {
-								wins_p.set(wins_p.x-wins_w + w_coord_x*i,
-									wins_p.y-wins_h + w_coord_y*j);
-								make_window(wins_p, 40, 20);
+						function make_roof(roof_p, roof_w, roof_h) {
+							ctx.fillStyle = rgba_change(main_color1, -60);
+							ctx.beginPath();
+							ctx.moveTo(roof_p.x, roof_p.y);
+							ctx.lineTo(roof_p.x-roof_w/2, roof_p.y);
+							ctx.lineTo(roof_p.x, roof_p.y - roof_h);
+							ctx.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
+							ctx.lineTo(roof_p.x, roof_p.y);
+							
+							//ctx.stroke();
+							ctx.fill();
+						}
+						function make_windows (base_p, base_w, base_h) {
+							var tmp_p = new point();
+							tmp_p.set(base_p.x, base_p.y);
+							ctx.fillStyle = rgba_change(main_color2, -60);
+							
+							function make_window(win_p, win_w, win_h) {
+								ctx.beginPath();
+								win_w=win_w/2;
+								win_h=win_h/2;
+								
+								ctx.moveTo(win_p.x-win_w/2, win_p.y);
+								ctx.lineTo(win_p.x-win_w/2, win_p.y - win_h);
+								ctx.lineTo(+win_p.x+ +win_w/2, win_p.y - win_h);
+								ctx.lineTo(+win_p.x+ +win_w/2, win_p.y);
+								ctx.lineTo(win_p.x-win_w/2, win_p.y);
+								ctx.fill();
 							}
+							var w_h = randd(10, 14);
+							var w_w = ~~(w_h/1.5);
+							var w_amount_x = ~~(base_w/w_w); // количество окон на этаже
+							var w_amount_y = ~~(base_h/w_h); // количество этажей
+
+							var w_coord_x = ~~(base_w/w_amount_x);
+							var w_coord_y = ~~(base_h/w_amount_y);
+							
+
+							for (var i = 0; i < w_amount_y; i++) { // этаж 
+								for (var j = 0; j < w_amount_x; j++) { // по этажу
+									tmp_p.set(
+										base_p.x - base_w/2 + w_w/2 + base_w/w_amount_x*j,
+										base_p.y - base_h + w_h/2+ base_h/w_amount_y*i
+										);
+									if(randd(-w_amount_y*w_amount_x,w_amount_y)>0)
+										make_window(tmp_p, w_w, w_h);
+								}
+							}
+
 						}
 
+						//base.set(c_width/2, c_height/3*2);
+						var b_width =  ~~(randd(3, 4)*10*k_size);
+						var b_height = ~~(randd(10, 11)*10*k_size/(k_height/3));
+						var r_width = ~~(randd(b_width/10, b_width/9)*10);
+						var r_height = ~~(randd(b_height/30, b_height/10)*10);
+						b_height+=80;
+						make_base(base, b_width, b_height);
+						make_windows(base, b_width, b_height);
+
+						base.set(base.x, base.y - b_height);
+						make_roof(base, r_width, r_height);
 					}
+					var building_base = new point();
+					var b_max = 10;
+					for (var i = 0; i < b_max; i++) {
+						var b_center_x = c_width/2 - randd(-c_width/40, c_width/40)*i/2;
+						var b_center_y = c_height/4*3;
+						building_base.set(b_center_x, b_center_y);
 
-					//base.set(c_width/2, c_height/3*2);
-					make_base(base, 200, 100);
-					make_windows(base, 200, 100);
-
-					base.set(base.x, base.y- 100);
-					make_roof(base, 200, 100);
-				}
-				var building_base = new point();
-				for (var i =0; i<8; i++) {
-					var b_center_x = c_width/2 - randd(-2,2)*i*40;
-					var b_center_y = c_height/3*2;
-					building_base.set(b_center_x, b_center_y);
-
-					make_building(building_base);
-				}
+						make_building(building_base, b_max-i+1, 0.7);
+					}
+				}				
 			}
 
 			function make_land(color1, color2) {
@@ -1579,12 +1609,13 @@ if(localStorage.getItem("flag_blur")!= null)
 			make_sky(main_color1, main_color2);
 			print_stars(main_color2);
 			var sun_color = make_sun();
-			/**/
+			
 			draw_clouds();
 			draw_rocks();
-			//make_buildings();
+			make_buildings();
+				
 			print_hills(main_color1, main_color2);
-			/**/
+			
 			if(randd(0,1)==1 && f_desert!=1 && f_cave!=1)
 			{
 				make_land(main_color1, main_color2);
