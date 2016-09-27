@@ -471,7 +471,7 @@ if(localStorage.getItem("flag_blur")!= null)
 			c_work.clearRect(0, 0, cw_width, cw_height);
 
 			var r_line = rand_line();
-			
+
 			var colors_day = [
 			'rgba(97, 202, 188, 1)',
 			'rgba(242, 246, 221, 1)',
@@ -539,7 +539,7 @@ if(localStorage.getItem("flag_blur")!= null)
 			if(randd(-7,1)>0) f_cave=1;
 
 			console.log("Выбрано: ["+i+"]"+"%c     " + "%c     ", "background: "+main_color1+";", "background: "+main_color2+";");
-			
+
 			function mountain_point(p1,p2, randp) {
 				//console.log(Math.pow((p2.x - p1.x),2));
 				//console.log(Math.pow((p2.y - p1.y),2));
@@ -575,12 +575,12 @@ if(localStorage.getItem("flag_blur")!= null)
 					for(var key in arry){
 						ar_l++;
 					}
-					
+
 					arry2.push(arry[0]);
 					for(k=0; k < ar_l-1; k++)
 					{
 						//distance = Math.sqrt(Math.pow(arry[k+1].x - arry[k].x) + Math.pow(arry[k+1].y - arry[k].y]));
-						
+
 						arry2.push(mountain_point(arry[k], arry[(k+1)], 5));
 						arry2.push(arry[k+1]);
 					}
@@ -784,7 +784,7 @@ if(localStorage.getItem("flag_blur")!= null)
 					ctx.fillRect(r_x1, r_y1, r_w, r_h);
 				}
 			}
-			
+
 			function draw_clouds() {
 				var cloud_pos = new point();
 				var w, h, x, y, n_max=randd(2,6), m_max=randd(4,29);
@@ -894,14 +894,14 @@ if(localStorage.getItem("flag_blur")!= null)
 					var columt_center_distance = 90*cave_k;
 					var columns_amount = ~~(c_width/columt_center_distance);
 					columt_center_distance= ~~(c_width/columns_amount);
-					var up_arr=[], down_arr=[]; 
+					var up_arr=[], down_arr=[];
 					for(var i=0; i < (c_width-columt_center_distance*2)/columt_center_distance; i++) {
 						up_arr[i] = new point((i+1)*columt_center_distance, c_height/2-randd(c_height/6*cave_k, c_height/2*cave_k));
-						down_arr[i] = new point((i+1)*columt_center_distance, c_height/2-randd(c_height/6*cave_k, c_height/2*cave_k)*-1);					
+						down_arr[i] = new point((i+1)*columt_center_distance, c_height/2-randd(c_height/6*cave_k, c_height/2*cave_k)*-1);
 					}
 					var main_arr = up_arr.reverse().concat(new point(columt_center_distance/2-randd(0,height_k), c_height/2-randd(-height_k,height_k)), down_arr, new point(c_width-columt_center_distance/2-randd(-height_k,0), c_height/2-randd(-height_k,height_k)), up_arr[0]);
-					
-					
+
+
 					main_arr = make_line(main_arr, 2);
 
 					ctx.strokeStyle="green";
@@ -914,8 +914,8 @@ if(localStorage.getItem("flag_blur")!= null)
 					ctx.lineTo(0, c_height);
 					ctx.lineTo(0, 0);
 					ctx.closePath();
-					
-					
+
+
 					ctx.moveTo(main_arr[0].x, main_arr[0].y);
 					for (var i = 1; i < main_arr.length; i++) {
 						ctx.lineTo(main_arr[i].x, main_arr[i].y);
@@ -923,10 +923,10 @@ if(localStorage.getItem("flag_blur")!= null)
 					}
 					//ctx.lineTo(main_arr[0].x, main_arr[0].y);
 					//ctx.stroke();
-						
+
 					var lingrad = ctx.createLinearGradient(0, 0, 0, c_height );
 
-					lingrad.addColorStop(0, rgba_change(main_color1, -(~~(150*cave_k)))); 
+					lingrad.addColorStop(0, rgba_change(main_color1, -(~~(150*cave_k))));
 					lingrad.addColorStop(1, rgba_change(main_color2, -(~~(150*cave_k))));
 					ctx.fillStyle = lingrad;
 
@@ -935,13 +935,20 @@ if(localStorage.getItem("flag_blur")!= null)
 				}
 				var amount= randd(1,5);
 				for(var t=amount; t<8; t++)
-				 make_cave_line(t);				
+				 make_cave_line(t);
 			}
 
 			function make_buildings() {
 				ctx.strokeStyle="green"; // Green path
 
-				function make_building () {
+				function make_building (building_base) {
+					var base = new point();
+					if (building_base == undefined) {
+						base.set(c_width/2, c_height/3*2);
+					} else {
+						base.set(building_base.x, building_base.y);
+					}
+
 					function make_base(base_p, base_h, base_w) {
 						ctx.beginPath();
 						ctx.moveTo(base_p.x, base_p.y);
@@ -983,16 +990,22 @@ if(localStorage.getItem("flag_blur")!= null)
 						}
 
 					}
-					var p = new point();
 
-					p.set(c_width/2, c_height/3*2);
-					make_base(p, 200, 100);
-					make_windows(p, 200, 100);
+					//base.set(c_width/2, c_height/3*2);
+					make_base(base, 200, 100);
+					make_windows(base, 200, 100);
 
-					p.set(c_width/2, c_height/3*2 - 100);
-					make_roof(p, 200, 100);
+					base.set(base.x, base.y- 100);
+					make_roof(base, 200, 100);
 				}
-				make_building();
+				var building_base = new point();
+				for (var i =0; i<8; i++) {
+					var b_center_x = c_width/2 - randd(-2,2)*i*40;
+					var b_center_y = c_height/3*2;
+					building_base.set(b_center_x, b_center_y);
+
+					make_building(building_base);
+				}
 			}
 
 			function make_land(color1, color2) {
@@ -1135,7 +1148,7 @@ if(localStorage.getItem("flag_blur")!= null)
 									var j_c = ~~((ls_w/6)* (j+1));
 									var k = ~~((i*0.6)+1);
 									l_p.set(ls_p.x -10 - (ls_w/2)/k + +(j_c)/k, ls_p.y + +(ls_h/11)*i - randd(3,3)/k);
-								
+
 									make_leaf(l_p, 70);
 								}
 							}
@@ -1577,12 +1590,12 @@ if(localStorage.getItem("flag_blur")!= null)
 				make_land(main_color1, main_color2);
 				make_forest(main_color1, main_color2);
 			}
-			if (f_cave==1) {				
+			if (f_cave==1) {
 				make_cave();
 			}
 
 			/**/
-			
+
 			return {
 				clr1: main_color1,
 				clr2: main_color2
@@ -1608,7 +1621,7 @@ if(localStorage.getItem("flag_blur")!= null)
 		if(bg_blur ==1)
 			$("#background").attr('class', 'blur');
 	}
-	
+
 	$(window).resize(function(){
 		make_back_2();
 	});
