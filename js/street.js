@@ -327,7 +327,7 @@ if(localStorage.getItem("flag_blur")!= null)
 				//color2 = st_color2;
 				var color_new = rgba_average(color1, st_color2, 3);
 
-				text_color = color1 = rgba_average(color1, st_color1, 2);
+				text_color = color1 = rgba_average(color1, st_color1, 3);
 				color2 = rgba_average(color1, st_color2, 7);
 				var grad =
 				"linear-gradient(to left, "+color_new+" 3px, transparent 15px),"+
