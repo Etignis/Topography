@@ -1034,14 +1034,56 @@ if(localStorage.getItem("flag_blur")!= null)
 							base.set(base.x, base.y - b_height);
 							make_roof(base, r_width, r_height);
 
-
 							base.set(base.x, base.y - b_height);
 							b_width =  ~~(randd(3, 4)*10*k_size);
-							b_height = ~~(randd(10, 11)*10*k_size/(k_height/3));
+							b_height = ~~(randd(3, 6)*10*k_size/(k_height/3));
 							r_width = ~~(randd(b_width/10, b_width/9)*10);
 							r_height = ~~(randd(b_height/30, b_height/10)*10);
 						}
 					} /// make building
+
+					function make_walls (p_base, width, height) {
+						var indent_size = 20;
+						var indent_amount = ~~(width/indent_size);
+						indent_size = ~~(width/indent_amount);
+						var p = new point(p_base.x, p_base.y);
+
+						ctx.beginPath();
+						ctx.moveTo(p.x - width/2, p.y);
+						ctx.lineTo(p.x - width/2, p.y - height);
+						ctx.lineTo(p.x - width/2, p.y - height);
+						//p.set(p.x - width/2, +p.y+ +(~~(indent_size/2)))
+						p.set(p_base.x - width/2, +p.y+ +(~~(indent_size/2)));
+						ctx.lineTo(p.x, p.y);
+
+						while (p.x < +p_base.x + +width) {
+							p.set(p.x +indent_size/2, +p.y+ +(~~(indent_size/2)));
+							ctx.lineTo(p.x, p.y);
+
+							p.set(p.x, p.y + indent_size);
+							ctx.lineTo(p.x, p.y);
+
+							p.set(p.x + indent_size, p.y);
+							ctx.lineTo(p.x, p.y);
+
+							p.set(p.x, p.y - indent_size);
+							ctx.lineTo(p.x, p.y);
+
+							p.set(p.x +indent_size/2, p.y);
+							ctx.lineTo(p.x, p.y);
+						}
+
+						p.set(p_base.x - width/2, p.y);
+						ctx.lineTo(p.x, p.y);
+
+						p.set(p_base.x, p.y-height);
+						ctx.lineTo(p.x, p.y);
+
+						p.set(p_base.x - width, p.y);
+						ctx.lineTo(p.x, p.y);
+
+						ctx.fill();
+					} /// make walls
 
 
 					var building_base = new point();
@@ -1054,6 +1096,8 @@ if(localStorage.getItem("flag_blur")!= null)
 
 						make_building(building_base, b_max-i+1, 0.7);
 					}
+
+					make_walls(new point(c_width/2, c_height/4*3), c_width/40, Math.max(30, c_height/15));
 				}
 			}
 
