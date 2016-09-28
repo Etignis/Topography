@@ -887,9 +887,9 @@ if(localStorage.getItem("flag_blur")!= null)
 			}
 
 			function make_cave() {
-				function make_cave_line(cave_k) {
+				function make_cave_line(k) {
 					// count columns amount
-					cave_k=cave_k*0.2;
+					cave_k=k*0.2;
 					var height_k = 40*cave_k;
 					var columt_center_distance = 90*cave_k;
 					var columns_amount = ~~(c_width/columt_center_distance);
@@ -901,8 +901,8 @@ if(localStorage.getItem("flag_blur")!= null)
 					}
 					var main_arr = up_arr.reverse().concat(new point(columt_center_distance/2-randd(0,height_k), c_height/2-randd(-height_k,height_k)), down_arr, new point(c_width-columt_center_distance/2-randd(-height_k,0), c_height/2-randd(-height_k,height_k)), up_arr[0]);
 
-
-					main_arr = make_line(main_arr, 2);
+					if(k>3)
+						main_arr = make_line(main_arr, 2);
 
 					ctx.strokeStyle="green";
 					ctx.lineWidth=5;
@@ -972,11 +972,15 @@ if(localStorage.getItem("flag_blur")!= null)
 							ctx.beginPath();
 							tx.moveTo(roof_p.x, roof_p.y);
 
-							if( randd(-2, 1)>0) { // расширяющийся верх
+							if (randd(-2, 1)>0) { // расширяющийся верх
 								ctx.lineTo(roof_p.x - base_w/2, roof_p.y);
 								ctx.lineTo(roof_p.x - base_w/2 - base_w/6, roof_p.y-base_h);
 								ctx.lineTo(+roof_p.x+ +base_w/2 + +base_w/6, roof_p.y - base_h);
 								ctx.lineTo(+roof_p.x+ +base_w/2, roof_p.y);
+
+								if (randd(-2, 1)>0) { // добалвяем гребень
+									make_walls(roof_p.set(roof_p.x, roof_p.y - roof_h), roof_w, Math.min(20, roof_h));
+								}
 							} else { // конический верх
 								ctx.lineTo(roof_p.x-roof_w/2, roof_p.y);
 								ctx.lineTo(roof_p.x, roof_p.y - roof_h);
@@ -1064,7 +1068,7 @@ if(localStorage.getItem("flag_blur")!= null)
 						p.set(p_base.x - width/2, +p.y+ +(~~(indent_size/2)));
 						ctx.lineTo(p.x, p.y);
 
-						while (p.x < +p_base.x + +width) {
+						while (p.x < +p_base.x + +width/2) {
 							p.set(p.x +indent_size/2, +p.y+ +(~~(indent_size/2)));
 							ctx.lineTo(p.x, p.y);
 
