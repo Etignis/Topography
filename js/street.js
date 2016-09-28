@@ -939,7 +939,7 @@ if(localStorage.getItem("flag_blur")!= null)
 			}
 
 			function make_buildings() {
-				if(randd(-5,1)>0) {
+				if(randd(1,2)>0) {
 					ctx.strokeStyle = "green"; // Green path
 					ctx.fillStyle = rgba_change(main_color1, -60);
 
@@ -970,16 +970,17 @@ if(localStorage.getItem("flag_blur")!= null)
 						function make_roof(roof_p, roof_w, roof_h) {
 							ctx.fillStyle = rgba_change(main_color1, -60);
 							ctx.beginPath();
-							tx.moveTo(roof_p.x, roof_p.y);
+							ctx.moveTo(roof_p.x, roof_p.y);
 
 							if (randd(-2, 1)>0) { // расширяющийся верх
-								ctx.lineTo(roof_p.x - base_w/2, roof_p.y);
-								ctx.lineTo(roof_p.x - base_w/2 - base_w/6, roof_p.y-base_h);
-								ctx.lineTo(+roof_p.x+ +base_w/2 + +base_w/6, roof_p.y - base_h);
-								ctx.lineTo(+roof_p.x+ +base_w/2, roof_p.y);
+								ctx.lineTo(roof_p.x - roof_w/2, roof_p.y);
+								ctx.lineTo(roof_p.x - roof_w/2 - roof_w/6, roof_p.y-roof_h);
+								ctx.lineTo(+roof_p.x+ +roof_w/2 + +roof_w/6, roof_p.y - roof_h);
+								ctx.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
 
 								if (randd(-2, 1)>0) { // добалвяем гребень
-									make_walls(roof_p.set(roof_p.x, roof_p.y - roof_h), roof_w, Math.min(20, roof_h));
+									roof_p.set(roof_p.x, roof_p.y - roof_h)
+									make_walls(roof_p, roof_w, Math.min(20, roof_h));
 								}
 							} else { // конический верх
 								ctx.lineTo(roof_p.x-roof_w/2, roof_p.y);
@@ -1083,6 +1084,7 @@ if(localStorage.getItem("flag_blur")!= null)
 
 							p.set(p.x +indent_size/2, p.y);
 							ctx.lineTo(p.x, p.y);
+							ctx.stroke();
 						}
 
 						p.set(p_base.x - width/2, p.y);
@@ -1109,7 +1111,7 @@ if(localStorage.getItem("flag_blur")!= null)
 						make_building(building_base, b_max-i+1, 0.7);
 					}
 
-					make_walls(new point(c_width/2, c_height/4*3), c_width/40, Math.max(30, c_height/15));
+					make_walls(new point(c_width/2, c_height/4*3), c_width/20, Math.max(30, c_height/15));
 				}
 			}
 
