@@ -990,7 +990,7 @@ if(localStorage.getItem("flag_blur")!= null)
 
 							//ctx.stroke();
 							ctx.fill();
-						}
+						} /// make roof
 
 						function make_windows (base_p, base_w, base_h) {
 							var tmp_p = new point();
