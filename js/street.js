@@ -970,10 +970,18 @@ if(localStorage.getItem("flag_blur")!= null)
 						function make_roof(roof_p, roof_w, roof_h) {
 							ctx.fillStyle = rgba_change(main_color1, -60);
 							ctx.beginPath();
-							ctx.moveTo(roof_p.x, roof_p.y);
-							ctx.lineTo(roof_p.x-roof_w/2, roof_p.y);
-							ctx.lineTo(roof_p.x, roof_p.y - roof_h);
-							ctx.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
+							tx.moveTo(roof_p.x, roof_p.y);
+
+							if( randd(-2, 1)>0) { // расширяющийся верх
+								ctx.lineTo(roof_p.x - base_w/2, roof_p.y);
+								ctx.lineTo(roof_p.x - base_w/2 - base_w/6, roof_p.y-base_h);
+								ctx.lineTo(+roof_p.x+ +base_w/2 + +base_w/6, roof_p.y - base_h);
+								ctx.lineTo(+roof_p.x+ +base_w/2, roof_p.y);
+							} else { // конический верх
+								ctx.lineTo(roof_p.x-roof_w/2, roof_p.y);
+								ctx.lineTo(roof_p.x, roof_p.y - roof_h);
+								ctx.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
+							}
 							ctx.lineTo(roof_p.x, roof_p.y);
 
 							//ctx.stroke();
