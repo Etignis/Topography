@@ -148,7 +148,7 @@ if(localStorage.getItem("flag_blur")!= null)
 		var name_line_2_he = "Яр, Бор, Лес, Овраг, Овражек, Ручей, Рог, Гусь, Брод, Камень, Холм, Выселок, Хуторок, Тыкмык, Сук, Кум, Калач, Хомутец, Лоб, Котёл, Жбан, Лог, Рудник, Чумыш, Курган, Ракит, Исток, Склон, Вал, Берег, Мыс, Ковш";
 		var name_line_2_she = "Холмовка, Бобровка, Падь, Куща, Балка, Горка, Скала, Грязь, Куриловка, Башня, Дубовка, Муходёровка, Бородёнка, Волчатка, Рыбушка, Вышенка, Дубрава, Капустинка, Калуженка, Гать, Речка, Долинка, Хорошавка, Калиновка, Нечаевка, Рожковка, Утянка, Глушинка, Пустынь, Кедровка, Шумиха, Травка, Отмель, Бурлинка";
 		var name_line_2_she_2 = "Холм, Бобр, Кущ, Гряз, Курил, Дуб, Муходёр, Волч, Рыб, Выш, Дубр, Капуст, Калуж, Гат, Реч, Дол, Хорош, Калин, Рож, Глуш, Пуст, Кедр, Шум, Трав, Отмел, Бурл, Греч, Бык, Бур, Бук, Верст, Перст, Чум, Крап, Хам, Руд, Кур, Истр, Ковш, Кус, Жбан, Яр, Бор, Овраж, Руч, Брод, Холм, Хутор, Калач, Хомут, Лоб, Руд, Гнезд, Нерест, Дупл, Камыш, Омут, Цап, Хряп, Жук, Брас, Бук, Штыр, Бег, Бед, Бир, Бес, Бод, Бок, Вал, Вед, Вест, Воз, Вяз, Вык, Гад, Год, Дух, Зоб, Зод, Зад, Зуб, Лаг, Мех, Мен, Мет, Меш, Мор, Мир, Мер, Мыс, Нов, Нос, Пер, Пик, Рад, Раз, Ров, Рог, Род, Рок, Сор, Суд, Тер, Ток, Хот";
-		var name_line_2_she_end = "авка, инка, енька, янка, овка, иха, ица, ушка, ница, ишка";
+		var name_line_2_she_end = "авка, инка, енька, янка, овка, иха, ица, ушка, ница, ишка, уха";
 		var name_line_2_it = "Гадюкино, Кукуево, Кудыкино, Овнище, Дно, Камышино, Займище, Суково, Такое, Подберезье, Заречье, Борово, Мохово, Заборово, Осколково, Орехово, Ложкино,  Брагино, Чесноково, Комарово, Луговое, Совино, Соколово, Сошниково, Озеро, Стуково, Рыбное, Столбово, Ручьево, Место, Курочкино, Дупло, Гнездо";
 		var name_line_2_they = "Попрыгушки, Овражки, Ручьи, Кочки, Столбы, Ели, Дубы, Омутищи, Камни, Выселки, Горшки, Рожки, Воробьи, Комары, Бодунищи, Бабенки, Огурцы, Пчелы, Змейки, Грязи, Винищи, Козляки, Мураши, Кобылки, Лепяги, Бельдяжки, Мурлы, Ломы, Чащи, Козлы, Лужи, Кобеляки, Кошки, Усищи, Раки, Полянки, Завалинки, Бочаги, Ключи, Рожки, Копытца, Сросты, Хутора, Балки, Конюхи, Горошки, Петухи, Мормышки, Мураши, Журавли, Окуньки, Бугры, Холмы, Омуты, Озерки, Камыши, Мысы, Табуны";
 
@@ -943,15 +943,9 @@ if(localStorage.getItem("flag_blur")!= null)
 					ctx.strokeStyle = "green"; // Green path
 					ctx.fillStyle = rgba_change(main_color1, -60);
 
-					function make_building (building_base, k_height, k_size) {
-						var base = new point();
-						if (building_base == undefined) {
-							base.set(c_width/2, c_height/3*2);
-						} else {
-							base.set(building_base.x, building_base.y);
-						}
 
-						function make_base(base_p, base_w, base_h) {
+
+						function make_base(base_p, base_w, base_h, floor) {
 							ctx.fillStyle = rgba_change(main_color1, -60);
 							ctx.beginPath();
 							ctx.moveTo(base_p.x, base_p.y);
@@ -963,25 +957,24 @@ if(localStorage.getItem("flag_blur")!= null)
 
 							//ctx.stroke();
 							ctx.fill();
-
-							make_windows(base_p, base_w, base_h);
+							if(floor==undefined || floor>1)
+								make_windows(base_p, base_w, base_h);
 						}
 
-						function make_roof(roof_p, roof_w, roof_h) {
+						function make_roof(roof_p, roof_w, roof_h, f) {
 							ctx.fillStyle = rgba_change(main_color1, -60);
 							ctx.beginPath();
 							ctx.moveTo(roof_p.x, roof_p.y);
+							var f_roof=0; // флаг типа крыши
+							if (randd(-2, 1)>0 && roof_h<roof_w ||f ==1) {
+								f_roof = 1;
+							}
 
-							if (randd(-2, 1)>0) { // расширяющийся верх
+							if (f_roof == 1) { // расширяющийся верх
 								ctx.lineTo(roof_p.x - roof_w/2, roof_p.y);
 								ctx.lineTo(roof_p.x - roof_w/2 - roof_w/6, roof_p.y-roof_h);
 								ctx.lineTo(+roof_p.x+ +roof_w/2 + +roof_w/6, roof_p.y - roof_h);
 								ctx.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
-
-								if (randd(-2, 1)>0) { // добалвяем гребень
-									roof_p.set(roof_p.x, roof_p.y - roof_h)
-									make_walls(roof_p, roof_w, Math.min(20, roof_h));
-								}
 							} else { // конический верх
 								ctx.lineTo(roof_p.x-roof_w/2, roof_p.y);
 								ctx.lineTo(roof_p.x, roof_p.y - roof_h);
@@ -991,6 +984,11 @@ if(localStorage.getItem("flag_blur")!= null)
 
 							//ctx.stroke();
 							ctx.fill();
+
+							if (f_roof == 1) { // гребень на крыше
+								roof_p.set(roof_p.x, roof_p.y - roof_h)
+								make_walls(roof_p, roof_w + roof_w/3, Math.min(20, roof_h));
+							}
 						} /// make roof
 
 						function make_windows (base_p, base_w, base_h) {
@@ -1010,10 +1008,10 @@ if(localStorage.getItem("flag_blur")!= null)
 								ctx.lineTo(win_p.x-win_w/2, win_p.y);
 								ctx.fill();
 							}
-							var w_h = randd(10, 14);
+							var w_h = randd(8, 10);
 							var w_w = ~~(w_h/1.5);
-							var w_amount_x = ~~(base_w/w_w); // количество окон на этаже
-							var w_amount_y = ~~(base_h/w_h); // количество этажей
+							var w_amount_x = ~~(base_w/w_w -2); // количество окон на этаже
+							var w_amount_y = ~~(base_h/w_h -2); // количество этажей
 
 							var w_coord_x = ~~(base_w/w_amount_x);
 							var w_coord_y = ~~(base_h/w_amount_y);
@@ -1025,12 +1023,20 @@ if(localStorage.getItem("flag_blur")!= null)
 										base_p.x - base_w/2 + w_w/2 + base_w/w_amount_x*j,
 										base_p.y - base_h + w_h/2+ base_h/w_amount_y*i
 										);
-									if(randd(-w_amount_y*w_amount_x,w_amount_y)>0)
+									if(randd(-w_amount_y*w_amount_x, w_amount_y/2)>0)
 										make_window(tmp_p, w_w, w_h);
 								}
 							}
 
 						} /// windows
+
+					function make_building (building_base, k_height, k_size, floor) {
+						var base = new point();
+						if (building_base == undefined) {
+							base.set(c_width/2, c_height/3*2);
+						} else {
+							base.set(building_base.x, building_base.y);
+						}
 
 						//base.set(c_width/2, c_height/3*2);
 						var b_width =  ~~(randd(3, 4)*10*k_size);
@@ -1041,36 +1047,40 @@ if(localStorage.getItem("flag_blur")!= null)
 
 						var floor_max = randd(1, 3);
 						for (var i = 0; i < floor_max; i++) {
-							make_base(base, b_width, b_height);
+							make_base(base, b_width, b_height, floor);
 							//make_windows(base, b_width, b_height);
 
 							base.set(base.x, base.y - b_height);
 							make_roof(base, r_width, r_height);
 
-							base.set(base.x, base.y - b_height);
+							base.set(base.x, base.y);
 							b_width =  ~~(randd(3, 4)*10*k_size);
 							b_height = ~~(randd(3, 6)*10*k_size/(k_height/3));
 							r_width = ~~(randd(b_width/10, b_width/9)*10);
 							r_height = ~~(randd(b_height/30, b_height/10)*10);
 						}
+
+						base = null;
 					} /// make building
 
 					function make_walls (p_base, width, height) {
-						var indent_size = 20;
+						/**/
+						var indent_size = width/20;
+							indent_size = Math.max(indent_size, 3);
 						var indent_amount = ~~(width/indent_size);
-						indent_size = ~~(width/indent_amount);
+							indent_size = ~~(width/indent_amount);
 						var p = new point(p_base.x, p_base.y);
 
 						ctx.beginPath();
 						ctx.moveTo(p.x - width/2, p.y);
 						ctx.lineTo(p.x - width/2, p.y - height);
-						ctx.lineTo(p.x - width/2, p.y - height);
+						//ctx.lineTo(p.x - width/2, p.y - height);
 						//p.set(p.x - width/2, +p.y+ +(~~(indent_size/2)))
-						p.set(p_base.x - width/2, +p.y+ +(~~(indent_size/2)));
+						p.set(p_base.x - width/2+ +(~~(indent_size/2)), +p.y - height );
 						ctx.lineTo(p.x, p.y);
 
-						while (p.x < +p_base.x + +width/2) {
-							p.set(p.x +indent_size/2, +p.y+ +(~~(indent_size/2)));
+						while (p.x+indent_size < +p_base.x + +width/2) {
+							p.set(p.x +indent_size/2, p.y);
 							ctx.lineTo(p.x, p.y);
 
 							p.set(p.x, p.y + indent_size);
@@ -1084,34 +1094,67 @@ if(localStorage.getItem("flag_blur")!= null)
 
 							p.set(p.x +indent_size/2, p.y);
 							ctx.lineTo(p.x, p.y);
-							ctx.stroke();
 						}
 
-						p.set(p_base.x - width/2, p.y);
+						p.set(+p.x + +indent_size/2, p.y);
 						ctx.lineTo(p.x, p.y);
 
-						p.set(p_base.x, p.y-height);
+						p.set(p.x, p.y + height);
 						ctx.lineTo(p.x, p.y);
 
-						p.set(p_base.x - width, p.y);
-						ctx.lineTo(p.x, p.y);
+						ctx.lineTo(p_base.x - width/2, p_base.y);
 
 						ctx.fill();
+						/**/
+
+						p = null;
 					} /// make walls
+
+					function make_town_walls (p_base, width, height) {
+						var towers = 5; // количество башен
+						var wall = width/(towers-1); // длина пролета стены
+						var p = new point();
+
+						for (var q=0; q<towers; q++) {
+							p.set(p_base.x - width/2 +q*width/towers, p_base.y);
+							make_tower(p, 16, randd(13, 16)*10);
+							if (q<towers-1) {
+								p.set(p.x + wall/2 -8, p_base.y)
+								make_wall(p, wall-16, 130);
+							}
+						}
+
+						function make_tower(p, w, h) {
+							var floors=3;
+							for (var i=0; i<floors; i++) {
+								make_base(p, w, ~~(h/floors), i);
+								p.set(p.x, p.y- ~~(h/floors));
+							}
+							make_roof(p, w, ~~(h/(floors*4)), 1);
+						}
+						function make_wall(p, w, h) {
+							make_base(p, w, h, 0);
+						}
+
+						p = null;
+
+					}
 
 
 					var building_base = new point();
 					var b_max = 10;
-
+/**/
 					for (var i = 0; i < b_max; i++) {
-						var b_center_x = c_width/2 - randd(-c_width/40, c_width/40)*i/2;
+						var b_center_x = c_width/2 - randd(-c_width/50, c_width/50)*i/2;
 						var b_center_y = c_height/4*3;
 						building_base.set(b_center_x, b_center_y);
 
-						make_building(building_base, b_max-i+1, 0.7);
+						make_building(building_base, b_max-i+1, 0.7, i);
 					}
-
-					make_walls(new point(c_width/2, c_height/4*3), c_width/20, Math.max(30, c_height/15));
+/**/
+					//make_walls(new point(c_width/2, c_height/4*3), c_width/5, Math.max(110, c_height/15));
+					make_town_walls(new point(c_width/2, c_height/4*3), c_width/5, Math.max(50, c_height/15))
+					building_base = null;
 				}
 			}
 
@@ -1684,13 +1727,15 @@ if(localStorage.getItem("flag_blur")!= null)
 			}
 
 			make_sky(main_color1, main_color2);
+/**/
 			print_stars(main_color2);
 			var sun_color = make_sun();
 
 			draw_clouds();
 			draw_rocks();
+			/**/
 			make_buildings();
-
+/**/
 			print_hills(main_color1, main_color2);
 
 			if(randd(0,1)==1 && f_desert!=1 && f_cave!=1)
