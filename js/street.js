@@ -446,29 +446,31 @@ if(localStorage.getItem("flag_blur")!= null)
 		var b_width = $("#background").width();
 		var b_height = $("#background").height();
 
-		if($("#canva").length<1)
+		if ($("#canva").length<1) {
 			$("#background").append("<canvas id='canva'></canvas>");
-		$("#canva").attr('width', b_width).attr('height', b_height)
-		if($("#c_work").length<1)
-			$("#background").append("<canvas id='c_work'></canvas>");
+			$("#background").append("<canvas id='canva1'></canvas>");
+			$("#background").append("<canvas id='canva2'></canvas>");
+		}
+		$("#canva").attr('width', b_width).attr('height', b_height);
+		$("#canva1").attr('width', b_width).attr('height', b_height);
+		$("#canva2").attr('width', b_width).attr('height', b_height);
 
 		var canvas = document.getElementById('canva');
+		var canvas1 = document.getElementById('canva1');
+		var canvas2 = document.getElementById('canva2');
 		var work_canva = document.getElementById('c_work');
 		if (canvas.getContext){
 			var ctx = canvas.getContext('2d');
-			var c_work = work_canva.getContext('2d');
+			var ctx1 = canvas1.getContext('2d');
+			var ctx2 = canvas2.getContext('2d');
 
 			var c_width = $("#canva").width();
 			var c_height = $("#canva").height();
 			var hor_height = c_height/10*6;
-			var cw_width = $("#c_work").width();
-			var cw_height = $("#c_work").height();
-
 			var sun_pos_h, sun_pos_hor, f_day=1, f_desert=0, f_cave=0;
 
 			// очищаем холст
 			ctx.clearRect(0, 0, c_width, c_height);
-			c_work.clearRect(0, 0, cw_width, cw_height);
 
 			var r_line = rand_line();
 
@@ -838,8 +840,8 @@ if(localStorage.getItem("flag_blur")!= null)
 						var mid = new point(), end = new point(), r_sid = 10;
 						mid.set(parseInt(+start.x+ +width/2 + +randd(-r_sid,r_sid)), start.y-height + +randd(-r_sid,r_sid));
 						end.set(parseInt(+start.x+ +width), start.y);
-						ctx.moveTo(start.x, start.y);
-						ctx.bezierCurveTo(+start.x + +parseInt(width/4), start.y, +start.x + +parseInt(width/4), mid.y, mid.x, mid.y);
+						ctx1.moveTo(start.x, start.y);
+						ctx1.bezierCurveTo(+start.x + +parseInt(width/4), start.y, +start.x + +parseInt(width/4), mid.y, mid.x, mid.y);
 						//ctx.stroke();
 
 						// make cactus here
@@ -848,28 +850,28 @@ if(localStorage.getItem("flag_blur")!= null)
 							make_cactus(mid, ~~((15-randd(-2,2))*k_cactus), ~~((50-randd(-20,20))*k_cactus));
 						//ctx.stroke();
 
-						ctx.bezierCurveTo(+start.x + +parseInt(width/4*3), mid.y, +start.x + +parseInt(width/4*3), start.y, end.x, end.y);
+						ctx1.bezierCurveTo(+start.x + +parseInt(width/4*3), mid.y, +start.x + +parseInt(width/4*3), start.y, end.x, end.y);
 						//ctx.stroke();
 
 						if(end.x<c_width)
 							make_hill(end, height, width, range, color1, color2);
 						else{
-							ctx.lineTo(c_width, c_height);
-							ctx.lineTo(0, c_height);
-							ctx.lineTo(start_p.x, start_p.y);
+							ctx1.lineTo(c_width, c_height);
+							ctx1.lineTo(0, c_height);
+							ctx1.lineTo(start_p.x, start_p.y);
 
-							var lingrad = ctx.createLinearGradient(0, +c_height/3 + +offset,0, +c_height + +offset);
+							var lingrad = ctx1.createLinearGradient(0, +c_height/3 + +offset,0, +c_height + +offset);
 							/*var color1=colors[i];
 							var color2=colors[+i + +1];*/
 
 							lingrad.addColorStop(0, color1);
 							lingrad.addColorStop(1, color2);
-							ctx.fillStyle = lingrad;
+							ctx1.fillStyle = lingrad;
 
-							ctx.fill();
+							ctx1.fill();
 						}
 					}
-					ctx.beginPath();
+					ctx1.beginPath();
 					make_hill(start_p, height, width, range, color1, color2);
 				}
 
@@ -904,33 +906,33 @@ if(localStorage.getItem("flag_blur")!= null)
 					if(k>3)
 						main_arr = make_line(main_arr, 2);
 
-					ctx.strokeStyle="green";
-					ctx.lineWidth=5;
+					ctx2.strokeStyle="green";
+					ctx2.lineWidth=5;
 					/**/
-					ctx.beginPath();
-					ctx.moveTo(0,0);
-					ctx.lineTo(c_width, 0);
-					ctx.lineTo(c_width, c_height);
-					ctx.lineTo(0, c_height);
-					ctx.lineTo(0, 0);
-					ctx.closePath();
+					ctx2.beginPath();
+					ctx2.moveTo(0,0);
+					ctx2.lineTo(c_width, 0);
+					ctx2.lineTo(c_width, c_height);
+					ctx2.lineTo(0, c_height);
+					ctx2.lineTo(0, 0);
+					ctx2.closePath();
 
 
-					ctx.moveTo(main_arr[0].x, main_arr[0].y);
+					ctx2.moveTo(main_arr[0].x, main_arr[0].y);
 					for (var i = 1; i < main_arr.length; i++) {
-						ctx.lineTo(main_arr[i].x, main_arr[i].y);
+						ctx2.lineTo(main_arr[i].x, main_arr[i].y);
 						//ctx.stroke();
 					}
 					//ctx.lineTo(main_arr[0].x, main_arr[0].y);
 					//ctx.stroke();
 
-					var lingrad = ctx.createLinearGradient(0, 0, 0, c_height );
+					var lingrad = ctx2.createLinearGradient(0, 0, 0, c_height );
 
 					lingrad.addColorStop(0, rgba_change(main_color1, -(~~(150*cave_k))));
 					lingrad.addColorStop(1, rgba_change(main_color2, -(~~(150*cave_k))));
-					ctx.fillStyle = lingrad;
+					ctx2.fillStyle = lingrad;
 
-					ctx.fill();
+					ctx2.fill();
 					/**/
 				}
 				var amount= randd(1,5);
@@ -941,50 +943,50 @@ if(localStorage.getItem("flag_blur")!= null)
 			function make_buildings() {
 				if(randd(-1,2)>0) {					
 					var hor_delta = c_width/randd(3,5) * (randd(0,1)>0?-1:1);
-					ctx.strokeStyle = "green"; // Green path
-					ctx.fillStyle = rgba_change(main_color1, -60);
+					ctx1.strokeStyle = "green"; // Green path
+					ctx1.fillStyle = rgba_change(main_color1, -60);
 
 
 
 						function make_base(base_p, base_w, base_h, floor) {
-							ctx.fillStyle = rgba_change(main_color1, -60);
-							ctx.beginPath();
-							ctx.moveTo(base_p.x, base_p.y);
-							ctx.lineTo(base_p.x-base_w/2, base_p.y);
-							ctx.lineTo(base_p.x-base_w/2, base_p.y-base_h);
-							ctx.lineTo(+base_p.x+ +base_w/2, base_p.y - base_h);
-							ctx.lineTo(+base_p.x+ +base_w/2, base_p.y);
-							ctx.lineTo(base_p.x, base_p.y);
+							ctx1.fillStyle = rgba_change(main_color1, -60);
+							ctx1.beginPath();
+							ctx1.moveTo(base_p.x, base_p.y);
+							ctx1.lineTo(base_p.x-base_w/2, base_p.y);
+							ctx1.lineTo(base_p.x-base_w/2, base_p.y-base_h);
+							ctx1.lineTo(+base_p.x+ +base_w/2, base_p.y - base_h);
+							ctx1.lineTo(+base_p.x+ +base_w/2, base_p.y);
+							ctx1.lineTo(base_p.x, base_p.y);
 
 							//ctx.stroke();
-							ctx.fill();
+							ctx1.fill();
 							if(floor==undefined || floor>1)
 								make_windows(base_p, base_w, base_h);
 						}
 
 						function make_roof(roof_p, roof_w, roof_h, f) {
-							ctx.fillStyle = rgba_change(main_color1, -60);
-							ctx.beginPath();
-							ctx.moveTo(roof_p.x, roof_p.y);
+							ctx1.fillStyle = rgba_change(main_color1, -60);
+							ctx1.beginPath();
+							ctx1.moveTo(roof_p.x, roof_p.y);
 							var f_roof=0; // флаг типа крыши
 							if (randd(-2, 1)>0 && roof_h<roof_w ||f ==1) {
 								f_roof = 1;
 							}
 
 							if (f_roof == 1) { // расширяющийся верх
-								ctx.lineTo(roof_p.x - roof_w/2, roof_p.y);
-								ctx.lineTo(roof_p.x - roof_w/2 - roof_w/6, roof_p.y-roof_h);
-								ctx.lineTo(+roof_p.x+ +roof_w/2 + +roof_w/6, roof_p.y - roof_h);
-								ctx.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
+								ctx1.lineTo(roof_p.x - roof_w/2, roof_p.y);
+								ctx1.lineTo(roof_p.x - roof_w/2 - roof_w/6, roof_p.y-roof_h);
+								ctx1.lineTo(+roof_p.x+ +roof_w/2 + +roof_w/6, roof_p.y - roof_h);
+								ctx1.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
 							} else { // конический верх
-								ctx.lineTo(roof_p.x-roof_w/2, roof_p.y);
-								ctx.lineTo(roof_p.x, roof_p.y - roof_h);
-								ctx.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
+								ctx1.lineTo(roof_p.x-roof_w/2, roof_p.y);
+								ctx1.lineTo(roof_p.x, roof_p.y - roof_h);
+								ctx1.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
 							}
-							ctx.lineTo(roof_p.x, roof_p.y);
+							ctx1.lineTo(roof_p.x, roof_p.y);
 
 							//ctx.stroke();
-							ctx.fill();
+							ctx1.fill();
 
 							if (f_roof == 1) { // гребень на крыше
 								roof_p.set(roof_p.x, roof_p.y - roof_h)
@@ -995,19 +997,19 @@ if(localStorage.getItem("flag_blur")!= null)
 						function make_windows (base_p, base_w, base_h) {
 							var tmp_p = new point();
 							tmp_p.set(base_p.x, base_p.y);
-							ctx.fillStyle = rgba_change(main_color2, -60);
+							ctx1.fillStyle = rgba_change(main_color2, -60);
 
 							function make_window(win_p, win_w, win_h) {
-								ctx.beginPath();
+								ctx1.beginPath();
 								win_w=win_w/2;
 								win_h=win_h/2;
 
-								ctx.moveTo(win_p.x-win_w/2, win_p.y);
-								ctx.lineTo(win_p.x-win_w/2, win_p.y - win_h);
-								ctx.lineTo(+win_p.x+ +win_w/2, win_p.y - win_h);
-								ctx.lineTo(+win_p.x+ +win_w/2, win_p.y);
-								ctx.lineTo(win_p.x-win_w/2, win_p.y);
-								ctx.fill();
+								ctx1.moveTo(win_p.x-win_w/2, win_p.y);
+								ctx1.lineTo(win_p.x-win_w/2, win_p.y - win_h);
+								ctx1.lineTo(+win_p.x+ +win_w/2, win_p.y - win_h);
+								ctx1.lineTo(+win_p.x+ +win_w/2, win_p.y);
+								ctx1.lineTo(win_p.x-win_w/2, win_p.y);
+								ctx1.fill();
 							}
 							var w_h = randd(8, 10);
 							var w_w = ~~(w_h/1.5);
@@ -1072,40 +1074,40 @@ if(localStorage.getItem("flag_blur")!= null)
 							indent_size = ~~(width/indent_amount);
 						var p = new point(p_base.x, p_base.y);
 
-						ctx.beginPath();
-						ctx.moveTo(p.x - width/2, p.y);
-						ctx.lineTo(p.x - width/2, p.y - height);
+						ctx1.beginPath();
+						ctx1.moveTo(p.x - width/2, p.y);
+						ctx1.lineTo(p.x - width/2, p.y - height);
 						//ctx.lineTo(p.x - width/2, p.y - height);
 						//p.set(p.x - width/2, +p.y+ +(~~(indent_size/2)))
 						p.set(p_base.x - width/2+ +(~~(indent_size/2)), +p.y - height );
-						ctx.lineTo(p.x, p.y);
+						ctx1.lineTo(p.x, p.y);
 
 						while (p.x+indent_size < +p_base.x + +width/2) {
 							p.set(p.x +indent_size/2, p.y);
-							ctx.lineTo(p.x, p.y);
+							ctx1.lineTo(p.x, p.y);
 
 							p.set(p.x, p.y + indent_size);
-							ctx.lineTo(p.x, p.y);
+							ctx1.lineTo(p.x, p.y);
 
 							p.set(p.x + indent_size, p.y);
-							ctx.lineTo(p.x, p.y);
+							ctx1.lineTo(p.x, p.y);
 
 							p.set(p.x, p.y - indent_size);
-							ctx.lineTo(p.x, p.y);
+							ctx1.lineTo(p.x, p.y);
 
 							p.set(p.x +indent_size/2, p.y);
-							ctx.lineTo(p.x, p.y);
+							ctx1.lineTo(p.x, p.y);
 						}
 
 						p.set(+p.x + +indent_size/2, p.y);
-						ctx.lineTo(p.x, p.y);
+						ctx1.lineTo(p.x, p.y);
 
 						p.set(p.x, p.y + height);
-						ctx.lineTo(p.x, p.y);
+						ctx1.lineTo(p.x, p.y);
 
-						ctx.lineTo(p_base.x - width/2, p_base.y);
+						ctx1.lineTo(p_base.x - width/2, p_base.y);
 
-						ctx.fill();
+						ctx1.fill();
 						/**/
 
 						p = null;
@@ -1160,12 +1162,12 @@ if(localStorage.getItem("flag_blur")!= null)
 			}
 
 			function make_land(color1, color2) {
-				var grd=ctx.createLinearGradient(0, c_height*4/5, 0, c_height);
+				var grd=ctx2.createLinearGradient(0, c_height*4/5, 0, c_height);
 				grd.addColorStop(0, rgba_change(color1, -60));
 				grd.addColorStop(1, rgba_change(color2, -60));
 
-				ctx.fillStyle=grd;
-				ctx.fillRect(0,c_height*4/5,c_width,c_height/5);
+				ctx2.fillStyle=grd;
+				ctx2.fillRect(0,c_height*4/5,c_width,c_height/5);
 			}
 
 			function print_stars(ps_color) {
@@ -1246,13 +1248,13 @@ if(localStorage.getItem("flag_blur")!= null)
 
 						new_p.x = get_point.x;
 						new_p.y = get_point.y - tr_height;
-						ctx.lineTo(new_p.x, new_p.y);
+						ctx2.lineTo(new_p.x, new_p.y);
 						new_p.x = new_p.x-br;
 						new_p.y = new_p.y-br;
-						ctx.lineTo(new_p.x, new_p.y);
+						ctx2.lineTo(new_p.x, new_p.y);
 						new_p.x = +new_p.x+ +br;
 						new_p.y = + new_p.y + +br/2;
-						ctx.lineTo(new_p.x, new_p.y);
+						ctx2.lineTo(new_p.x, new_p.y);
 
 						if(new_p.y>0)
 							make_trunk_up(new_p);
@@ -1269,13 +1271,13 @@ if(localStorage.getItem("flag_blur")!= null)
 
 						new_p.x = + get_point.x + +br;
 						new_p.y = get_point.y - br/2;
-						ctx.lineTo(new_p.x, new_p.y);
+						ctx2.lineTo(new_p.x, new_p.y);
 						new_p.x = new_p.x - br;
 						new_p.y = +new_p.y + +br;
-						ctx.lineTo(new_p.x, new_p.y);
+						ctx2.lineTo(new_p.x, new_p.y);
 						new_p.x = new_p.x;
 						new_p.y = +new_p.y + +tr_height;
-						ctx.lineTo(new_p.x, new_p.y);
+						ctx2.lineTo(new_p.x, new_p.y);
 
 						if(new_p.y<basis.y - (+root+ +tr_height*1.5))
 							make_trunk_down(new_p);
@@ -1283,10 +1285,10 @@ if(localStorage.getItem("flag_blur")!= null)
 						{
 							//new_p.x = new_p.x;
 							new_p.y = basis.y-root;//+new_p.y + +tr_height;
-							ctx.lineTo(new_p.x, new_p.y);
+							ctx2.lineTo(new_p.x, new_p.y);
 							new_p.x = +new_p.x + +root;
 							new_p.y = +new_p.y + +root;
-							ctx.lineTo(new_p.x, new_p.y);
+							ctx2.lineTo(new_p.x, new_p.y);
 						}
 					}
 					function make_leafs (ls_p, ls_h) {
@@ -1309,34 +1311,34 @@ if(localStorage.getItem("flag_blur")!= null)
 					function make_leaf (l_p, l_w) {
 						l_p.set(l_p.x-randd(-10,10), l_p.y-randd(-30,30));
 						l_w = l_w - randd(-5,5)*3;
-						ctx.beginPath();
-						ctx.moveTo(l_p.x, l_p.y);
-						ctx.lineTo(l_p.x-l_w/2, l_p.y + +l_w/2);
-						ctx.lineTo(+l_p.x+ +l_w/2, l_p.y + +l_w/2);
-						ctx.lineTo(l_p.x, l_p.y);
+						ctx2.beginPath();
+						ctx2.moveTo(l_p.x, l_p.y);
+						ctx2.lineTo(l_p.x-l_w/2, l_p.y + +l_w/2);
+						ctx2.lineTo(+l_p.x+ +l_w/2, l_p.y + +l_w/2);
+						ctx2.lineTo(l_p.x, l_p.y);
 						//ctx.stroke();
-						ctx.fillStyle = rgba_change(main_color1, randd(-15,15), randd(3,10)*0.1, -randd(1,5)*3, randd(1,5)*3, -randd(1,5)*3);
-						ctx.fill();
+						ctx2.fillStyle = rgba_change(main_color1, randd(-15,15), randd(3,10)*0.1, -randd(1,5)*3, randd(1,5)*3, -randd(1,5)*3);
+						ctx2.fill();
 					}
 
-					ctx.beginPath();
+					ctx2.beginPath();
 					var root_x1 = ~~(basis.x-width/2-root);
 					var root_y1 = basis.y;
 					var root_x2 = ~~(basis.x-width/2);
 					var root_y2 = basis.y-root;
-					ctx.moveTo(root_x1, root_y1);
-					ctx.lineTo(root_x2, root_y2);
+					ctx2.moveTo(root_x1, root_y1);
+					ctx2.lineTo(root_x2, root_y2);
 					pnt.set(root_x2, root_y2);
 					make_trunk_up(pnt);
 					pnt.set(basis.x, 0);
 					make_trunk_down(pnt, basis);
 
-					var tree = ctx.createLinearGradient(0,0,0,basis.y);
+					var tree = ctx2.createLinearGradient(0,0,0,basis.y);
 					tree.addColorStop(0, rgba_change(cl1, 10));
 					tree.addColorStop(.99, rgba_change(cl2, 30));
 					tree.addColorStop(1, rgba_change(cl2, 30, 0));
-					ctx.fillStyle = tree;
-					ctx.fill();
+					ctx2.fillStyle = tree;
+					ctx2.fill();
 					if(f_leafs==1)
 						make_leafs(pnt, 200);
 				}
@@ -1667,63 +1669,63 @@ if(localStorage.getItem("flag_blur")!= null)
 				//ctx.beginPath();
 				//ctx.moveTo(mc_1.x, mc_1.y); //strt
 					m_x = mc_1.x; m_y = mc_1.y - f_line;
-				ctx.lineTo(m_x, m_y); //fst line
+				ctx1.lineTo(m_x, m_y); //fst line
 
 					bc1_x = m_x - db -rb; bc1_y = m_y;
 					bc2_x = bc1_x; bc2_y = bc1_y;
 					m_x = m_x - db -rb; m_y = m_y  - db -rb;
-				ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch outer arc
+				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch outer arc
 
 					m_y = m_y-lb_line;
-				ctx.lineTo(m_x, m_y); //left branch left line
+				ctx1.lineTo(m_x, m_y); //left branch left line
 
 					bc1_x = m_x; bc1_y = m_y - db/3*2;
 					bc2_x = +m_x + +db; bc2_y = bc1_y;
 					m_x = +m_x + +db;
-				ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch top arc
+				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch top arc
 
 					m_y = +m_y + +lb_line;
-				ctx.lineTo(m_x, m_y); //left branch right line
+				ctx1.lineTo(m_x, m_y); //left branch right line
 
 					bc1_x = m_x; bc1_y = +m_y + +rb;
 					bc2_x = bc1_x; bc2_y = bc1_y
 					m_x = +m_x + +rb; m_y = +m_y + +rb;
-				ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch inner arc
+				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch inner arc
 
 					m_y = m_y -t1_line;
-				ctx.lineTo(m_x, m_y); //trunk left line
+				ctx1.lineTo(m_x, m_y); //trunk left line
 
 					bc1_x = m_x; bc1_y = m_y - mc_dt/3*2;
 					bc2_x = +m_x + +mc_dt; bc2_y = bc1_y;
 					m_x = +m_x + +mc_dt;
-				ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // trunk top arc
+				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // trunk top arc
 
 					m_y = +m_y + +t1_line-t2_line;
-				ctx.lineTo(m_x, m_y); //trunk right line
+				ctx1.lineTo(m_x, m_y); //trunk right line
 
 					bc1_x = +m_x + rb; bc1_y = m_y;
 					bc2_x = bc1_x; bc2_y = bc1_y;
 					m_x = +m_x + +rb; m_y = m_y - rb
-				ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch inner arc
+				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch inner arc
 
 					m_y = m_y -rb_line;
-				ctx.lineTo(m_x, m_y); //right branch left line
+				ctx1.lineTo(m_x, m_y); //right branch left line
 
 					bc1_x = m_x; bc1_y = m_y - db/3*2;
 					bc2_x = +m_x + +db; bc2_y = bc1_y;
 					m_x = +m_x + +db;
-				ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch top arc
+				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch top arc
 
 					m_y = +m_y + +rb_line;
-				ctx.lineTo(m_x, m_y); //right branch right line
+				ctx1.lineTo(m_x, m_y); //right branch right line
 
 					bc1_x = m_x; bc1_y = +m_y + +rb + +db;
 					bc2_x = bc1_x; bc2_y = bc1_y;
 					m_x = m_x - rb - db; m_y = +m_y + +rb + +db
-				ctx.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch outer arc
+				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch outer arc
 
 					m_y = mc_1.y;
-				ctx.lineTo(m_x, m_y); //right trunk line
+				ctx1.lineTo(m_x, m_y); //right trunk line
 				//ctx.stroke();
 			}
 
@@ -1872,4 +1874,29 @@ if(localStorage.getItem("flag_blur")!= null)
 		return false;
 	});
 
+	$(document).mousemove(function(e){
+    var X = e.pageX; // положения по оси X
+    var Y = e.pageY; // положения по оси Y
+					var c_width = $("#canva").width();
+   // console.log("X: " + X + " Y: " + Y); // вывод результата в консоль
+	 
+	 var delta = c_width/2 - X;
+	 delta = ~~((delta*100/(c_width))/7);
+	 //delta = Math.max(40, c_width/40)/delta;
+	 console.log(delta);
+	 /*
+	 c_width/2 = 100%
+	 delta = x%
+	 
+	 x = delta*100/c_width/2
+	 */
+	 $("#canva1").css("left", delta);
+	 $("#canva2").css("left", delta*2);
+	 
+	 /*
+	 $("#canva1").css("top", delta*1.1);
+	 $("#canva2").css("top", delta*1.4);
+	 */
+	 //console.log(delta);
+}); 
 });
