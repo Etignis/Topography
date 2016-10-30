@@ -939,7 +939,8 @@ if(localStorage.getItem("flag_blur")!= null)
 			}
 
 			function make_buildings() {
-				if(randd(1,2)>0) {
+				if(randd(1,2)>0) {					
+					var hor_delta = c_width/randd(3,5) * (randd(0,1)>0?-1:1);
 					ctx.strokeStyle = "green"; // Green path
 					ctx.fillStyle = rgba_change(main_color1, -60);
 
@@ -1143,9 +1144,9 @@ if(localStorage.getItem("flag_blur")!= null)
 
 					var building_base = new point();
 					var b_max = 10;
-/**/
+/**/			
 					for (var i = 0; i < b_max; i++) {
-						var b_center_x = c_width/2 - randd(-c_width/50, c_width/50)*i/2;
+						var b_center_x = c_width/2 - randd(-c_width/50, c_width/50)*i/2 - hor_delta;
 						var b_center_y = c_height/4*3;
 						building_base.set(b_center_x, b_center_y);
 
@@ -1153,7 +1154,7 @@ if(localStorage.getItem("flag_blur")!= null)
 					}
 /**/
 					//make_walls(new point(c_width/2, c_height/4*3), c_width/5, Math.max(110, c_height/15));
-					make_town_walls(new point(c_width/2, c_height/4*3), c_width/5, Math.max(50, c_height/15))
+					make_town_walls(new point(c_width/2 - hor_delta, c_height/4*3), c_width/5, Math.max(50, c_height/15))
 					building_base = null;
 				}
 			}
