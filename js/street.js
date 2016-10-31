@@ -442,27 +442,51 @@ if(localStorage.getItem("flag_blur")!= null)
 
 	function make_back_2() {
 		//$("#background").css({'background': 'url("img/f1.jpg") center center', 'background-size': 'cover', "opacity": ".8"});
+    /*
+    sky, stars, sun
+    clouds,
+    mountains,
+    city
+    hills
+    front
+    */
 
 		var b_width = $("#background").width();
 		var b_height = $("#background").height();
 
 		if ($("#canva").length<1) {
-			$("#background").append("<canvas id='canva'></canvas>");
-			$("#background").append("<canvas id='canva1'></canvas>");
-			$("#background").append("<canvas id='canva2'></canvas>");
+			$("#background").append("<canvas class='canvas' id='canva'></canvas>");
+			$("#background").append("<canvas class='canvas' id='canva1'></canvas>");
+      $("#background").append("<canvas class='canvas' id='canva2'></canvas>");
+      $("#background").append("<canvas class='canvas' id='canva3'></canvas>");
+      $("#background").append("<canvas class='canvas' id='canva4'></canvas>");
+      $("#background").append("<canvas class='canvas' id='canva5'></canvas>");
+			$("#background").append("<canvas class='canvas' id='canva6'></canvas>");
 		}
-		$("#canva").attr('width', b_width).attr('height', b_height);
-		$("#canva1").attr('width', b_width).attr('height', b_height);
-		$("#canva2").attr('width', b_width).attr('height', b_height);
+    $("#canva").attr('width', b_width).attr('height', b_height);
+    $("#canva1").attr('width', b_width).attr('height', b_height);
+    $("#canva2").attr('width', b_width).attr('height', b_height);
+		$("#canva3").attr('width', b_width).attr('height', b_height);
+		$("#canva4").attr('width', b_width).attr('height', b_height);
+    $("#canva5").attr('width', b_width).attr('height', b_height);
+		$("#canva6").attr('width', b_width).attr('height', b_height);
 
-		var canvas = document.getElementById('canva');
-		var canvas1 = document.getElementById('canva1');
-		var canvas2 = document.getElementById('canva2');
-		var work_canva = document.getElementById('c_work');
+    var canvas = document.getElementById('canva');
+    var canvas1 = document.getElementById('canva1');
+    var canvas2 = document.getElementById('canva2');
+		var canvas3 = document.getElementById('canva3');
+		var canvas4 = document.getElementById('canva4');
+    var canvas5 = document.getElementById('canva5');
+		var canvas6 = document.getElementById('canva6');
+
 		if (canvas.getContext){
-			var ctx = canvas.getContext('2d');
-			var ctx1 = canvas1.getContext('2d');
-			var ctx2 = canvas2.getContext('2d');
+      var ctx = canvas.getContext('2d');
+      var ctx1 = canvas1.getContext('2d');
+      var ctx2 = canvas2.getContext('2d');
+			var ctx3 = canvas3.getContext('2d');
+			var ctx4 = canvas4.getContext('2d');
+      var ctx5 = canvas5.getContext('2d');
+			var ctx6 = canvas6.getContext('2d');
 
 			var c_width = $("#canva").width();
 			var c_height = $("#canva").height();
@@ -593,25 +617,33 @@ if(localStorage.getItem("flag_blur")!= null)
 				return arry;
 				}
 
-			function make_sky(cl1, cl2){
+			function make_sky(cl1, cl2, layer){
+
+        if (layer == undefined) {
+          layer = ctx;
+        }
 				function print_sky(color1, color2){
 					if(color1 === undefined)
 						color1 = 'rgba(97, 202, 188, 1)';
 					if(color2 === undefined)
 						color2 = 'rgba(242, 246, 221, 1)';
 
-					var sky = ctx.createLinearGradient(0,0,0, c_height);
+					var sky = layer.createLinearGradient(0,0,0, c_height);
 					sky.addColorStop(0, color1);
 					sky.addColorStop(.5, color2);
 					sky.addColorStop(1, color2);
-					ctx.fillStyle = sky;
-					ctx.fillRect(0,0,c_width,c_height);
+					layer.fillStyle = sky;
+					layer.fillRect(0,0,c_width,c_height);
 				}
 				//var i = randd(0, colors.length/2)
 				print_sky(cl1, cl2);
 			}
 
-			function make_sun(){
+			function make_sun(layer){
+
+        if (layer == undefined) {
+          layer = ctx;
+        }
 				function print_sun(pos, radius, color)
 				{
 					if(radius === undefined)
@@ -641,7 +673,7 @@ if(localStorage.getItem("flag_blur")!= null)
 					var r_w=radius*2;
 					var r_h=radius*2;
 
-					var sun = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, radius);
+					var sun = layer.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, radius);
 					if(f_day==1)
 					{
 
@@ -656,8 +688,8 @@ if(localStorage.getItem("flag_blur")!= null)
 						sun.addColorStop(.9, rgba_change(color_end, 0, .3));
 						sun.addColorStop(.91, rgba_change(color_end, 0, .0));
 						sun.addColorStop(1, rgba_change(color_end, 0, 0));
-						ctx.fillStyle = sun;
-						ctx.fillRect(r_x1, r_y1, r_w, r_h);
+						layer.fillStyle = sun;
+						layer.fillRect(r_x1, r_y1, r_w, r_h);
 					}
 					else
 					{
@@ -673,13 +705,13 @@ if(localStorage.getItem("flag_blur")!= null)
 							py1 =  pos.y - vert_d; // у1 пересечения
 							py2 = +pos.y+ +vert_d; // у2 пересечения
 
-							ctx.beginPath();
-							ctx.moveTo(px, py1);
-							ctx.bezierCurveTo(pos.x - radius*2*sign, pos.y-radius-d, pos.x - radius*2*sign, +pos.y + +radius + +d, px, py2);
-							ctx.bezierCurveTo(pos.x - radius*sign, +pos.y + +d, pos.x - radius*sign, pos.y -d, px, py1);
+							layer.beginPath();
+							layer.moveTo(px, py1);
+							layer.bezierCurveTo(pos.x - radius*2*sign, pos.y-radius-d, pos.x - radius*2*sign, +pos.y + +radius + +d, px, py2);
+							layer.bezierCurveTo(pos.x - radius*sign, +pos.y + +d, pos.x - radius*sign, pos.y -d, px, py1);
 
-							ctx.fillStyle =  rgba_change(color_start, 40, 1);
-							ctx.fill();
+							layer.fillStyle =  rgba_change(color_start, 40, 1);
+							layer.fill();
 							}
 						else
 							{
@@ -687,39 +719,11 @@ if(localStorage.getItem("flag_blur")!= null)
 							sun.addColorStop(.89, rgba_change(color_start, 40, 1));
 							sun.addColorStop(.9, rgba_change(color_start, 40, 0));
 							sun.addColorStop(1, rgba_change(color_start, 40, 0));
-							ctx.fillStyle = sun;
-							ctx.fillRect(r_x1, r_y1, r_w, r_h);
+							layer.fillStyle = sun;
+							layer.fillRect(r_x1, r_y1, r_w, r_h);
 							}
 						// /getmoon
-
-						/*/
-						sun.addColorStop(0, rgba_change(color_start, 40, 1));
-						sun.addColorStop(.89, rgba_change(color_start, 40, 1));
-						sun.addColorStop(.9, rgba_change(color_start, 40, 0));
-						sun.addColorStop(1, rgba_change(color_start, 40, 0));
-						/**/
 					}
-					//ctx.fillStyle = sun;
-
-					/*
-					if(f_day==1)
-						{
-						ctx.fillStyle = sun;
-						ctx.fillRect(r_x1, r_y1, r_w, r_h);
-						}
-					else
-						{
-
-							//ctx.stroke();
-						//ctx.fillRect(r_x1, r_y1, r_w, r_h);
-						}
-					*/
-					/*/
-					ctx.beginPath();
-					ctx.rect(pos.x-5, pos.y-5, 10, 10);
-					ctx.fillStyle = "red";
-					ctx.fill();
-					/**/
 
 				}
 				var sun_pos = new point();
@@ -739,7 +743,11 @@ if(localStorage.getItem("flag_blur")!= null)
 			}
 
 		    /// do not insert in...
-			function make_cloud(pos, height, width, color) {
+			function make_cloud(layer, pos, height, width, color) {
+
+        if (layer == undefined) {
+          layer = ctx;
+        }
 				var count = randd(3,7);
 				var radius, cloud;
 				if(height === undefined)
@@ -772,22 +780,26 @@ if(localStorage.getItem("flag_blur")!= null)
 					if(radius<0)
 						radius*=-1;
 
-					cloud = ctx.createRadialGradient(+pos.x+ +radius, pos.y, 1, +pos.x+ +radius, pos.y, radius);
+					cloud = layer.createRadialGradient(+pos.x+ +radius, pos.y, 1, +pos.x+ +radius, pos.y, radius);
 					cloud.addColorStop(0, color);
 					cloud.addColorStop(.99, color);
 					cloud.addColorStop(1, rgba_change(color, 0, 0));
 					//cloud.addColorStop(1, 'rgba(0,0,0,.2)');
-					ctx.fillStyle = cloud;
+					layer.fillStyle = cloud;
 
 					var r_x1=pos.x;
 					var r_y1=pos.y - height;
 					var r_w=width;
 					var r_h=height;
-					ctx.fillRect(r_x1, r_y1, r_w, r_h);
+					layer.fillRect(r_x1, r_y1, r_w, r_h);
 				}
 			}
 
-			function draw_clouds() {
+			function draw_clouds(layer) {
+
+        if (layer == undefined) {
+          layer = ctx;
+        }
 				var cloud_pos = new point();
 				var w, h, x, y, n_max=randd(2,6), m_max=randd(4,29);
 				for(var n = 0; n<n_max; n++)
@@ -800,13 +812,17 @@ if(localStorage.getItem("flag_blur")!= null)
 						x = ~~(c_width/m_max*(m+1)-randd(-c_width/m_max, c_width/m_max));
 						y = ~~(c_height/20*(n+1)*3-randd(-c_height/m_max, c_height/m_max));
 						cloud_pos.set(x, y);
-						make_cloud(cloud_pos, h, w, main_color2);
+						make_cloud(layer, cloud_pos, h, w, main_color2);
 						}
 					}
 				}
 			}
 
-			function print_hills(color1, color2, width, height) {
+			function print_hills(color1, color2, layer, width, height) {
+
+        if (layer == undefined) {
+          layer = ctx;
+        }
 				if(color1 === undefined)
 					color1 = 'rgba(246, 178, 139, 1)';
 				if(color2 === undefined)
@@ -840,38 +856,38 @@ if(localStorage.getItem("flag_blur")!= null)
 						var mid = new point(), end = new point(), r_sid = 10;
 						mid.set(parseInt(+start.x+ +width/2 + +randd(-r_sid,r_sid)), start.y-height + +randd(-r_sid,r_sid));
 						end.set(parseInt(+start.x+ +width), start.y);
-						ctx1.moveTo(start.x, start.y);
-						ctx1.bezierCurveTo(+start.x + +parseInt(width/4), start.y, +start.x + +parseInt(width/4), mid.y, mid.x, mid.y);
+						layer.moveTo(start.x, start.y);
+						layer.bezierCurveTo(+start.x + +parseInt(width/4), start.y, +start.x + +parseInt(width/4), mid.y, mid.x, mid.y);
 						//ctx.stroke();
 
 						// make cactus here
 						var k_cactus = ((range+1)*0.2).toFixed(1);
 						if(randd(0,1)>0 && f_desert==1)
-							make_cactus(mid, ~~((15-randd(-2,2))*k_cactus), ~~((50-randd(-20,20))*k_cactus));
+							make_cactus(mid, ~~((15-randd(-2,2))*k_cactus), ~~((50-randd(-20,20))*k_cactus), layer);
 						//ctx.stroke();
 
-						ctx1.bezierCurveTo(+start.x + +parseInt(width/4*3), mid.y, +start.x + +parseInt(width/4*3), start.y, end.x, end.y);
+						layer.bezierCurveTo(+start.x + +parseInt(width/4*3), mid.y, +start.x + +parseInt(width/4*3), start.y, end.x, end.y);
 						//ctx.stroke();
 
 						if(end.x<c_width)
 							make_hill(end, height, width, range, color1, color2);
 						else{
-							ctx1.lineTo(c_width, c_height);
-							ctx1.lineTo(0, c_height);
-							ctx1.lineTo(start_p.x, start_p.y);
+							layer.lineTo(c_width, c_height);
+							layer.lineTo(0, c_height);
+							layer.lineTo(start_p.x, start_p.y);
 
-							var lingrad = ctx1.createLinearGradient(0, +c_height/3 + +offset,0, +c_height + +offset);
+							var lingrad = layer.createLinearGradient(0, +c_height/3 + +offset,0, +c_height + +offset);
 							/*var color1=colors[i];
 							var color2=colors[+i + +1];*/
 
 							lingrad.addColorStop(0, color1);
 							lingrad.addColorStop(1, color2);
-							ctx1.fillStyle = lingrad;
+							layer.fillStyle = lingrad;
 
-							ctx1.fill();
+							layer.fill();
 						}
 					}
-					ctx1.beginPath();
+					layer.beginPath();
 					make_hill(start_p, height, width, range, color1, color2);
 				}
 
@@ -888,7 +904,11 @@ if(localStorage.getItem("flag_blur")!= null)
 				}
 			}
 
-			function make_cave() {
+			function make_cave(layer) {
+
+        if (layer == undefined) {
+          layer = ctx;
+        }
 				function make_cave_line(k) {
 					// count columns amount
 					cave_k=k*0.2;
@@ -906,33 +926,33 @@ if(localStorage.getItem("flag_blur")!= null)
 					if(k>3)
 						main_arr = make_line(main_arr, 2);
 
-					ctx2.strokeStyle="green";
-					ctx2.lineWidth=5;
+					layer.strokeStyle="green";
+					layer.lineWidth=5;
 					/**/
-					ctx2.beginPath();
-					ctx2.moveTo(0,0);
-					ctx2.lineTo(c_width, 0);
-					ctx2.lineTo(c_width, c_height);
-					ctx2.lineTo(0, c_height);
-					ctx2.lineTo(0, 0);
-					ctx2.closePath();
+					layer.beginPath();
+					layer.moveTo(0,0);
+					layer.lineTo(c_width, 0);
+					layer.lineTo(c_width, c_height);
+					layer.lineTo(0, c_height);
+					layer.lineTo(0, 0);
+					layer.closePath();
 
 
-					ctx2.moveTo(main_arr[0].x, main_arr[0].y);
+					layer.moveTo(main_arr[0].x, main_arr[0].y);
 					for (var i = 1; i < main_arr.length; i++) {
-						ctx2.lineTo(main_arr[i].x, main_arr[i].y);
+						layer.lineTo(main_arr[i].x, main_arr[i].y);
 						//ctx.stroke();
 					}
 					//ctx.lineTo(main_arr[0].x, main_arr[0].y);
 					//ctx.stroke();
 
-					var lingrad = ctx2.createLinearGradient(0, 0, 0, c_height );
+					var lingrad = layer.createLinearGradient(0, 0, 0, c_height );
 
 					lingrad.addColorStop(0, rgba_change(main_color1, -(~~(150*cave_k))));
 					lingrad.addColorStop(1, rgba_change(main_color2, -(~~(150*cave_k))));
-					ctx2.fillStyle = lingrad;
+					layer.fillStyle = lingrad;
 
-					ctx2.fill();
+					layer.fill();
 					/**/
 				}
 				var amount= randd(1,5);
@@ -940,53 +960,57 @@ if(localStorage.getItem("flag_blur")!= null)
 				 make_cave_line(t);
 			}
 
-			function make_buildings() {
-				if(randd(-1,2)>0) {					
+			function make_buildings(layer) {
+
+        if (layer == undefined) {
+          layer = ctx;
+        }
+				if(randd(-1,2)>0) {
 					var hor_delta = c_width/randd(3,5) * (randd(0,1)>0?-1:1);
-					ctx1.strokeStyle = "green"; // Green path
-					ctx1.fillStyle = rgba_change(main_color1, -60);
+					layer.strokeStyle = "green"; // Green path
+					layer.fillStyle = rgba_change(main_color1, -60);
 
 
 
 						function make_base(base_p, base_w, base_h, floor) {
-							ctx1.fillStyle = rgba_change(main_color1, -60);
-							ctx1.beginPath();
-							ctx1.moveTo(base_p.x, base_p.y);
-							ctx1.lineTo(base_p.x-base_w/2, base_p.y);
-							ctx1.lineTo(base_p.x-base_w/2, base_p.y-base_h);
-							ctx1.lineTo(+base_p.x+ +base_w/2, base_p.y - base_h);
-							ctx1.lineTo(+base_p.x+ +base_w/2, base_p.y);
-							ctx1.lineTo(base_p.x, base_p.y);
+							layer.fillStyle = rgba_change(main_color1, -60);
+							layer.beginPath();
+							layer.moveTo(base_p.x, base_p.y);
+							layer.lineTo(base_p.x-base_w/2, base_p.y);
+							layer.lineTo(base_p.x-base_w/2, base_p.y-base_h);
+							layer.lineTo(+base_p.x+ +base_w/2, base_p.y - base_h);
+							layer.lineTo(+base_p.x+ +base_w/2, base_p.y);
+							layer.lineTo(base_p.x, base_p.y);
 
 							//ctx.stroke();
-							ctx1.fill();
+							layer.fill();
 							if(floor==undefined || floor>1)
 								make_windows(base_p, base_w, base_h);
 						}
 
 						function make_roof(roof_p, roof_w, roof_h, f) {
-							ctx1.fillStyle = rgba_change(main_color1, -60);
-							ctx1.beginPath();
-							ctx1.moveTo(roof_p.x, roof_p.y);
+							layer.fillStyle = rgba_change(main_color1, -60);
+							layer.beginPath();
+							layer.moveTo(roof_p.x, roof_p.y);
 							var f_roof=0; // флаг типа крыши
 							if (randd(-2, 1)>0 && roof_h<roof_w ||f ==1) {
 								f_roof = 1;
 							}
 
 							if (f_roof == 1) { // расширяющийся верх
-								ctx1.lineTo(roof_p.x - roof_w/2, roof_p.y);
-								ctx1.lineTo(roof_p.x - roof_w/2 - roof_w/6, roof_p.y-roof_h);
-								ctx1.lineTo(+roof_p.x+ +roof_w/2 + +roof_w/6, roof_p.y - roof_h);
-								ctx1.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
+								layer.lineTo(roof_p.x - roof_w/2, roof_p.y);
+								layer.lineTo(roof_p.x - roof_w/2 - roof_w/6, roof_p.y-roof_h);
+								layer.lineTo(+roof_p.x+ +roof_w/2 + +roof_w/6, roof_p.y - roof_h);
+								layer.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
 							} else { // конический верх
-								ctx1.lineTo(roof_p.x-roof_w/2, roof_p.y);
-								ctx1.lineTo(roof_p.x, roof_p.y - roof_h);
-								ctx1.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
+								layer.lineTo(roof_p.x-roof_w/2, roof_p.y);
+								layer.lineTo(roof_p.x, roof_p.y - roof_h);
+								layer.lineTo(+roof_p.x+ +roof_w/2, roof_p.y);
 							}
-							ctx1.lineTo(roof_p.x, roof_p.y);
+							layer.lineTo(roof_p.x, roof_p.y);
 
 							//ctx.stroke();
-							ctx1.fill();
+							layer.fill();
 
 							if (f_roof == 1) { // гребень на крыше
 								roof_p.set(roof_p.x, roof_p.y - roof_h)
@@ -997,19 +1021,19 @@ if(localStorage.getItem("flag_blur")!= null)
 						function make_windows (base_p, base_w, base_h) {
 							var tmp_p = new point();
 							tmp_p.set(base_p.x, base_p.y);
-							ctx1.fillStyle = rgba_change(main_color2, -60);
+							layer.fillStyle = rgba_change(main_color2, -60);
 
 							function make_window(win_p, win_w, win_h) {
-								ctx1.beginPath();
+								layer.beginPath();
 								win_w=win_w/2;
 								win_h=win_h/2;
 
-								ctx1.moveTo(win_p.x-win_w/2, win_p.y);
-								ctx1.lineTo(win_p.x-win_w/2, win_p.y - win_h);
-								ctx1.lineTo(+win_p.x+ +win_w/2, win_p.y - win_h);
-								ctx1.lineTo(+win_p.x+ +win_w/2, win_p.y);
-								ctx1.lineTo(win_p.x-win_w/2, win_p.y);
-								ctx1.fill();
+								layer.moveTo(win_p.x-win_w/2, win_p.y);
+								layer.lineTo(win_p.x-win_w/2, win_p.y - win_h);
+								layer.lineTo(+win_p.x+ +win_w/2, win_p.y - win_h);
+								layer.lineTo(+win_p.x+ +win_w/2, win_p.y);
+								layer.lineTo(win_p.x-win_w/2, win_p.y);
+								layer.fill();
 							}
 							var w_h = randd(8, 10);
 							var w_w = ~~(w_h/1.5);
@@ -1074,40 +1098,40 @@ if(localStorage.getItem("flag_blur")!= null)
 							indent_size = ~~(width/indent_amount);
 						var p = new point(p_base.x, p_base.y);
 
-						ctx1.beginPath();
-						ctx1.moveTo(p.x - width/2, p.y);
-						ctx1.lineTo(p.x - width/2, p.y - height);
+						layer.beginPath();
+						layer.moveTo(p.x - width/2, p.y);
+						layer.lineTo(p.x - width/2, p.y - height);
 						//ctx.lineTo(p.x - width/2, p.y - height);
 						//p.set(p.x - width/2, +p.y+ +(~~(indent_size/2)))
 						p.set(p_base.x - width/2+ +(~~(indent_size/2)), +p.y - height );
-						ctx1.lineTo(p.x, p.y);
+						layer.lineTo(p.x, p.y);
 
 						while (p.x+indent_size < +p_base.x + +width/2) {
 							p.set(p.x +indent_size/2, p.y);
-							ctx1.lineTo(p.x, p.y);
+							layer.lineTo(p.x, p.y);
 
 							p.set(p.x, p.y + indent_size);
-							ctx1.lineTo(p.x, p.y);
+							layer.lineTo(p.x, p.y);
 
 							p.set(p.x + indent_size, p.y);
-							ctx1.lineTo(p.x, p.y);
+							layer.lineTo(p.x, p.y);
 
 							p.set(p.x, p.y - indent_size);
-							ctx1.lineTo(p.x, p.y);
+							layer.lineTo(p.x, p.y);
 
 							p.set(p.x +indent_size/2, p.y);
-							ctx1.lineTo(p.x, p.y);
+							layer.lineTo(p.x, p.y);
 						}
 
 						p.set(+p.x + +indent_size/2, p.y);
-						ctx1.lineTo(p.x, p.y);
+						layer.lineTo(p.x, p.y);
 
 						p.set(p.x, p.y + height);
-						ctx1.lineTo(p.x, p.y);
+						layer.lineTo(p.x, p.y);
 
-						ctx1.lineTo(p_base.x - width/2, p_base.y);
+						layer.lineTo(p_base.x - width/2, p_base.y);
 
-						ctx1.fill();
+						layer.fill();
 						/**/
 
 						p = null;
@@ -1146,7 +1170,7 @@ if(localStorage.getItem("flag_blur")!= null)
 
 					var building_base = new point();
 					var b_max = 10;
-/**/			
+/**/
 					for (var i = 0; i < b_max; i++) {
 						var b_center_x = c_width/2 - randd(-c_width/50, c_width/50)*i/2 - hor_delta;
 						var b_center_y = c_height/4*3;
@@ -1161,16 +1185,22 @@ if(localStorage.getItem("flag_blur")!= null)
 				}
 			}
 
-			function make_land(color1, color2) {
-				var grd=ctx2.createLinearGradient(0, c_height*4/5, 0, c_height);
+			function make_land(color1, color2, layer) {
+        if (layer == undefined) {
+          layer = ctx;
+        }
+				var grd=layer.createLinearGradient(0, c_height*4/5, 0, c_height);
 				grd.addColorStop(0, rgba_change(color1, -60));
 				grd.addColorStop(1, rgba_change(color2, -60));
 
-				ctx2.fillStyle=grd;
-				ctx2.fillRect(0,c_height*4/5,c_width,c_height/5);
+				layer.fillStyle=grd;
+				layer.fillRect(0,c_height*4/5,c_width,c_height/5);
 			}
 
-			function print_stars(ps_color) {
+			function print_stars(ps_color, layer) {
+        if (layer == undefined) {
+          layer = ctx;
+        }
 				if(ps_color === undefined)
 					var ps_color = "rgba(255,255,255,1)";
 
@@ -1193,13 +1223,13 @@ if(localStorage.getItem("flag_blur")!= null)
 						var color = rgba_change(main_color2, 50);
 					}
 
-					ctx.beginPath();
-					ctx.moveTo(pos.x, pos.y-rad);//top
-					ctx.lineTo(pos.x-(~~(rad/2)), pos.y);//left
-					ctx.lineTo(pos.x, +pos.y + +rad);//bottom
-					ctx.lineTo(+pos.x + +(~~(rad/2)), pos.y);//right
-					ctx.fillStyle = color;
-					ctx.fill();
+					layer.beginPath();
+					layer.moveTo(pos.x, pos.y-rad);//top
+					layer.lineTo(pos.x-(~~(rad/2)), pos.y);//left
+					layer.lineTo(pos.x, +pos.y + +rad);//bottom
+					layer.lineTo(+pos.x + +(~~(rad/2)), pos.y);//right
+					layer.fillStyle = color;
+					layer.fill();
 				}
 
 				if(f_day==0)
@@ -1228,7 +1258,10 @@ if(localStorage.getItem("flag_blur")!= null)
 				}
 			}
 
-			function make_forest(cl1, cl2) {
+			function make_forest(cl1, cl2, layer) {
+        if (layer == undefined) {
+          layer = ctx;
+        }
 				function make_tree_1(cl1, cl2, basis, width, f_leafs){
 					if(basis === undefined)
 					{
@@ -1248,13 +1281,13 @@ if(localStorage.getItem("flag_blur")!= null)
 
 						new_p.x = get_point.x;
 						new_p.y = get_point.y - tr_height;
-						ctx2.lineTo(new_p.x, new_p.y);
+						layer.lineTo(new_p.x, new_p.y);
 						new_p.x = new_p.x-br;
 						new_p.y = new_p.y-br;
-						ctx2.lineTo(new_p.x, new_p.y);
+						layer.lineTo(new_p.x, new_p.y);
 						new_p.x = +new_p.x+ +br;
 						new_p.y = + new_p.y + +br/2;
-						ctx2.lineTo(new_p.x, new_p.y);
+						layer.lineTo(new_p.x, new_p.y);
 
 						if(new_p.y>0)
 							make_trunk_up(new_p);
@@ -1271,13 +1304,13 @@ if(localStorage.getItem("flag_blur")!= null)
 
 						new_p.x = + get_point.x + +br;
 						new_p.y = get_point.y - br/2;
-						ctx2.lineTo(new_p.x, new_p.y);
+						layer.lineTo(new_p.x, new_p.y);
 						new_p.x = new_p.x - br;
 						new_p.y = +new_p.y + +br;
-						ctx2.lineTo(new_p.x, new_p.y);
+						layer.lineTo(new_p.x, new_p.y);
 						new_p.x = new_p.x;
 						new_p.y = +new_p.y + +tr_height;
-						ctx2.lineTo(new_p.x, new_p.y);
+						layer.lineTo(new_p.x, new_p.y);
 
 						if(new_p.y<basis.y - (+root+ +tr_height*1.5))
 							make_trunk_down(new_p);
@@ -1285,10 +1318,10 @@ if(localStorage.getItem("flag_blur")!= null)
 						{
 							//new_p.x = new_p.x;
 							new_p.y = basis.y-root;//+new_p.y + +tr_height;
-							ctx2.lineTo(new_p.x, new_p.y);
+							layer.lineTo(new_p.x, new_p.y);
 							new_p.x = +new_p.x + +root;
 							new_p.y = +new_p.y + +root;
-							ctx2.lineTo(new_p.x, new_p.y);
+							layer.lineTo(new_p.x, new_p.y);
 						}
 					}
 					function make_leafs (ls_p, ls_h) {
@@ -1311,34 +1344,34 @@ if(localStorage.getItem("flag_blur")!= null)
 					function make_leaf (l_p, l_w) {
 						l_p.set(l_p.x-randd(-10,10), l_p.y-randd(-30,30));
 						l_w = l_w - randd(-5,5)*3;
-						ctx2.beginPath();
-						ctx2.moveTo(l_p.x, l_p.y);
-						ctx2.lineTo(l_p.x-l_w/2, l_p.y + +l_w/2);
-						ctx2.lineTo(+l_p.x+ +l_w/2, l_p.y + +l_w/2);
-						ctx2.lineTo(l_p.x, l_p.y);
+						layer.beginPath();
+						layer.moveTo(l_p.x, l_p.y);
+						layer.lineTo(l_p.x-l_w/2, l_p.y + +l_w/2);
+						layer.lineTo(+l_p.x+ +l_w/2, l_p.y + +l_w/2);
+						layer.lineTo(l_p.x, l_p.y);
 						//ctx.stroke();
-						ctx2.fillStyle = rgba_change(main_color1, randd(-15,15), randd(3,10)*0.1, -randd(1,5)*3, randd(1,5)*3, -randd(1,5)*3);
-						ctx2.fill();
+						layer.fillStyle = rgba_change(main_color1, randd(-15,15), randd(3,10)*0.1, -randd(1,5)*3, randd(1,5)*3, -randd(1,5)*3);
+						layer.fill();
 					}
 
-					ctx2.beginPath();
+					layer.beginPath();
 					var root_x1 = ~~(basis.x-width/2-root);
 					var root_y1 = basis.y;
 					var root_x2 = ~~(basis.x-width/2);
 					var root_y2 = basis.y-root;
-					ctx2.moveTo(root_x1, root_y1);
-					ctx2.lineTo(root_x2, root_y2);
+					layer.moveTo(root_x1, root_y1);
+					layer.lineTo(root_x2, root_y2);
 					pnt.set(root_x2, root_y2);
 					make_trunk_up(pnt);
 					pnt.set(basis.x, 0);
 					make_trunk_down(pnt, basis);
 
-					var tree = ctx2.createLinearGradient(0,0,0,basis.y);
+					var tree = layer.createLinearGradient(0,0,0,basis.y);
 					tree.addColorStop(0, rgba_change(cl1, 10));
 					tree.addColorStop(.99, rgba_change(cl2, 30));
 					tree.addColorStop(1, rgba_change(cl2, 30, 0));
-					ctx2.fillStyle = tree;
-					ctx2.fill();
+					layer.fillStyle = tree;
+					layer.fill();
 					if(f_leafs==1)
 						make_leafs(pnt, 200);
 				}
@@ -1370,7 +1403,7 @@ if(localStorage.getItem("flag_blur")!= null)
 							make_tree_1(cl1, cl2, tree_point, wid, f_leafs);
 							tree_point.x-=randd(90, 150);
 							tree_point.y-=-15;
-							make_cloud(tree_point, randd(80, 120), randd(250, 350), rgba_change(cl1, -30, 1));
+							make_cloud(layer, tree_point, randd(80, 120), randd(250, 350), rgba_change(cl1, -30, 1));
 						}
 						/*/
 						if(rnd==5){
@@ -1383,7 +1416,10 @@ if(localStorage.getItem("flag_blur")!= null)
 				}
 			}
 
-			function draw_rocks()	{
+			function draw_rocks(layer)	{
+        if (layer == undefined) {
+          layer = ctx;
+        }
 				function make_rock(mr_point, mr_height, mr_width, mr_color1, mr_color2)
 					{
 					function print_rock(color1, color2, r_pos, r_height, r_width){
@@ -1556,39 +1592,39 @@ if(localStorage.getItem("flag_blur")!= null)
 							arry_right = line_right(arry_right, 2);
 
 
-							ctx.beginPath();
+							layer.beginPath();
 
 							var rock_rr = 0; //randd(-4,-1) * 5;
 							arry = arry_left.reverse().concat(arry_right);
 
 							for(e=0; e< arry.length; e++)
 								{
-								ctx.lineTo(arry[e].x, arry[e].y);
+								layer.lineTo(arry[e].x, arry[e].y);
 								//console.log("P: "+arry[e].x+" "+arry[e].y);
 
 								}
-							ctx.lineTo(arry[0].x, arry[0].y);
+							layer.lineTo(arry[0].x, arry[0].y);
 
-							ctx.fillStyle = rgba_change(color1, rock_rr);
-							ctx.fill();
+							layer.fillStyle = rgba_change(color1, rock_rr);
+							layer.fill();
 
 
 							arry = [];
 							arry = arry_mid.reverse().concat(arry_right);
 
-							ctx.beginPath();
+							layer.beginPath();
 							for(e=0; e< arry.length; e++)
 								{
-								ctx.lineTo(arry[e].x, arry[e].y);
+								layer.lineTo(arry[e].x, arry[e].y);
 								//console.log("P: "+arry[e].x+" "+arry[e].y);
 
 								}
-							ctx.lineTo(arry[0].x, arry[0].y);
+							layer.lineTo(arry[0].x, arry[0].y);
 
-							ctx.fillStyle = rgba_change(color2, rock_rr);
-							ctx.fill();
-							ctx.strokeStyle=rgba_change(color2, rock_rr);
-							ctx.stroke();
+							layer.fillStyle = rgba_change(color2, rock_rr);
+							layer.fill();
+							layer.strokeStyle=rgba_change(color2, rock_rr);
+							layer.stroke();
 
 							/*/
 							ctx.beginPath();
@@ -1635,7 +1671,10 @@ if(localStorage.getItem("flag_blur")!= null)
 			 * @param {number} main height
 			 *
 			 */
-			function make_cactus(mc_p1, mc_dt, mc_h){
+			function make_cactus(mc_p1, mc_dt, mc_h, layer){
+        if (layer == undefined) {
+          layer = ctx;
+        }
 				var mc_1 = new point(), mc_2 = new point(), mc_w;
 				var db, rb;
 				var f_direction = 1;
@@ -1669,85 +1708,85 @@ if(localStorage.getItem("flag_blur")!= null)
 				//ctx.beginPath();
 				//ctx.moveTo(mc_1.x, mc_1.y); //strt
 					m_x = mc_1.x; m_y = mc_1.y - f_line;
-				ctx1.lineTo(m_x, m_y); //fst line
+				layer.lineTo(m_x, m_y); //fst line
 
 					bc1_x = m_x - db -rb; bc1_y = m_y;
 					bc2_x = bc1_x; bc2_y = bc1_y;
 					m_x = m_x - db -rb; m_y = m_y  - db -rb;
-				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch outer arc
+				layer.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch outer arc
 
 					m_y = m_y-lb_line;
-				ctx1.lineTo(m_x, m_y); //left branch left line
+				layer.lineTo(m_x, m_y); //left branch left line
 
 					bc1_x = m_x; bc1_y = m_y - db/3*2;
 					bc2_x = +m_x + +db; bc2_y = bc1_y;
 					m_x = +m_x + +db;
-				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch top arc
+				layer.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch top arc
 
 					m_y = +m_y + +lb_line;
-				ctx1.lineTo(m_x, m_y); //left branch right line
+				layer.lineTo(m_x, m_y); //left branch right line
 
 					bc1_x = m_x; bc1_y = +m_y + +rb;
 					bc2_x = bc1_x; bc2_y = bc1_y
 					m_x = +m_x + +rb; m_y = +m_y + +rb;
-				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch inner arc
+				layer.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // left branch inner arc
 
 					m_y = m_y -t1_line;
-				ctx1.lineTo(m_x, m_y); //trunk left line
+				layer.lineTo(m_x, m_y); //trunk left line
 
 					bc1_x = m_x; bc1_y = m_y - mc_dt/3*2;
 					bc2_x = +m_x + +mc_dt; bc2_y = bc1_y;
 					m_x = +m_x + +mc_dt;
-				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // trunk top arc
+				layer.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // trunk top arc
 
 					m_y = +m_y + +t1_line-t2_line;
-				ctx1.lineTo(m_x, m_y); //trunk right line
+				layer.lineTo(m_x, m_y); //trunk right line
 
 					bc1_x = +m_x + rb; bc1_y = m_y;
 					bc2_x = bc1_x; bc2_y = bc1_y;
 					m_x = +m_x + +rb; m_y = m_y - rb
-				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch inner arc
+				layer.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch inner arc
 
 					m_y = m_y -rb_line;
-				ctx1.lineTo(m_x, m_y); //right branch left line
+				layer.lineTo(m_x, m_y); //right branch left line
 
 					bc1_x = m_x; bc1_y = m_y - db/3*2;
 					bc2_x = +m_x + +db; bc2_y = bc1_y;
 					m_x = +m_x + +db;
-				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch top arc
+				layer.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch top arc
 
 					m_y = +m_y + +rb_line;
-				ctx1.lineTo(m_x, m_y); //right branch right line
+				layer.lineTo(m_x, m_y); //right branch right line
 
 					bc1_x = m_x; bc1_y = +m_y + +rb + +db;
 					bc2_x = bc1_x; bc2_y = bc1_y;
 					m_x = m_x - rb - db; m_y = +m_y + +rb + +db
-				ctx1.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch outer arc
+				layer.bezierCurveTo(bc1_x, bc1_y, bc2_x, bc2_y, m_x, m_y); // right branch outer arc
 
 					m_y = mc_1.y;
-				ctx1.lineTo(m_x, m_y); //right trunk line
+				layer.lineTo(m_x, m_y); //right trunk line
 				//ctx.stroke();
 			}
 
-			make_sky(main_color1, main_color2);
+			make_sky(main_color1, main_color2, ctx);
 /**/
-			print_stars(main_color2);
-			var sun_color = make_sun();
+			print_stars(main_color2, ctx);
+			var sun_color = make_sun(ctx);
 
-			draw_clouds();
-			draw_rocks();
+			draw_clouds(ctx1);
+			draw_rocks(ctx2);
 			/**/
-			make_buildings();
+			make_buildings(ctx3);
 /**/
-			print_hills(main_color1, main_color2);
+			print_hills(main_color1, main_color2, ctx4);
 
 			if(randd(0,1)==1 && f_desert!=1 && f_cave!=1)
 			{
-				make_land(main_color1, main_color2);
-				make_forest(main_color1, main_color2);
+				make_land(main_color1, main_color2, ctx5);
+				make_forest(main_color1, main_color2, ctx5);
 			}
 			if (f_cave==1) {
-				make_cave();
+				make_cave(ctx6);
 			}
 
 			/**/
@@ -1874,12 +1913,12 @@ if(localStorage.getItem("flag_blur")!= null)
 		return false;
 	});
 
-	$(document).mousemove(function(e){
+	$('body').mousemove( function (e) {
     var X = e.pageX; // положения по оси X
     var Y = e.pageY; // положения по оси Y
-					var c_width = $("#canva").width();
+		var c_width = $("#canva").width();
    // console.log("X: " + X + " Y: " + Y); // вывод результата в консоль
-	 
+
 	 var delta = c_width/2 - X;
 	 delta = ~~((delta*100/(c_width))/7);
 	 //delta = Math.max(40, c_width/40)/delta;
@@ -1887,16 +1926,20 @@ if(localStorage.getItem("flag_blur")!= null)
 	 /*
 	 c_width/2 = 100%
 	 delta = x%
-	 
+
 	 x = delta*100/c_width/2
 	 */
 	 $("#canva1").css("left", delta);
-	 $("#canva2").css("left", delta*2);
-	 
+   $("#canva2").css("left", delta*1.8);
+   $("#canva3").css("left", delta*2.6);
+   $("#canva4").css("left", delta*3.4);
+   $("#canva5").css("left", delta*4.2);
+	 $("#canva6").css("left", delta*5);
+
 	 /*
 	 $("#canva1").css("top", delta*1.1);
 	 $("#canva2").css("top", delta*1.4);
 	 */
 	 //console.log(delta);
-}); 
+});
 });
