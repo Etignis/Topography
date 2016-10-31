@@ -1180,7 +1180,7 @@ if(localStorage.getItem("flag_blur")!= null)
 					}
 /**/
 					//make_walls(new point(c_width/2, c_height/4*3), c_width/5, Math.max(110, c_height/15));
-					make_town_walls(new point(c_width/2 - hor_delta, c_height/4*3), c_width/5, Math.max(50, c_height/15))
+					make_town_walls(new point(c_width/2 - hor_delta, c_height/4*3 - randd(-10, -5)*5), c_width/5, Math.max(50, c_height/15))
 					building_base = null;
 				}
 			}
@@ -1916,7 +1916,8 @@ if(localStorage.getItem("flag_blur")!= null)
 	$('body').mousemove( function (e) {
     var X = e.pageX; // положения по оси X
     var Y = e.pageY; // положения по оси Y
-		var c_width = $("#canva").width();
+    var c_width = $("#canva").width();
+		var c_height = $("#canva").height();
    // console.log("X: " + X + " Y: " + Y); // вывод результата в консоль
 
 	 var delta = c_width/2 - X;
@@ -1935,6 +1936,15 @@ if(localStorage.getItem("flag_blur")!= null)
    $("#canva4").css("left", delta*3.4);
    $("#canva5").css("left", delta*4.2);
 	 $("#canva6").css("left", delta*5);
+
+   delta = c_height*2/3 - Y;
+   delta = ~~((delta*100/(c_height))/11);
+   $("#canva1").css("top", delta);
+   $("#canva2").css("top", delta*1.8);
+   $("#canva3").css("top", delta*2.6);
+   $("#canva4").css("top", delta*3.4);
+   $("#canva5").css("top", delta*4.2);
+   $("#canva6").css("top", delta*5);
 
 	 /*
 	 $("#canva1").css("top", delta*1.1);
