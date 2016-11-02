@@ -440,6 +440,8 @@ if(localStorage.getItem("flag_blur")!= null)
     return color;
   }
 
+    var canvas = [];
+    var ctx = [];
   function make_back_2() {
     //$("#background").css({'background': 'url("img/f1.jpg") center center', 'background-size': 'cover', "opacity": ".8"});
     /*
@@ -450,37 +452,76 @@ if(localStorage.getItem("flag_blur")!= null)
     hills
     front
     */
-    var canvasAmount = 6;
+    var canvasAmount = 0;
+    var c_width;
+    var c_height;
 
     var b_width = $("#background").width();
     var b_height = $("#background").height();
-    var canvas = [];
-    var ctx = [];
+      canvasAmount = $("#background .canvas").length;
+
+ $("#background").empty();
+    // create canvas
+    function createCanvas(i, text){
+      /*
+      if is emty
+
+      */
+      canvasAmount = $("#background .canvas").length;
+
+      if(text==undefined) {
+          text = "";
+        }
+      if (i==undefined || i<0) {
+        for (var k=0; k<canvasAmount; k++) {
+          if (ctx[k].empty !== false) {
+            i=k;
+            break;
+          }
+        }
+        if (i==undefined || i<0) {
+          canvasAmount++;
+          i = canvasAmount-1;
+        }
+      }
+
+      // if no layers, create new
+      if ($("#canva"+i).length<1) {
+        $("#background").append("<canvas class='canvas' id='canva"+i+"' data-text="+text+"></canvas>");
+        $("#canva"+i).attr('width', b_width).attr('height', b_height);
+        canvas[i] = document.getElementById('canva'+i);
+        ctx[i] = {
+          "body": canvas[i].getContext('2d'),
+          "empty": false
+        };
+        //ctx[i].empty = false;
+      }
+      c_width = $("#canva0").width();
+      c_height = $("#canva0").height();
+
+      return i;
+    }
 
     if ($("#canva0").length<1) {
       for (var i = 0; i<canvasAmount; i++) {
-        $("#background").append("<canvas class='canvas' id='canva"+i+"'></canvas>");
+        createCanvas(i);
       }
     }
 
-    for (var i = 0; i<canvasAmount; i++) {
-      $("#canva"+i).attr('width', b_width).attr('height', b_height);
-      canvas[i] = document.getElementById('canva'+i);
-    }
+    if (canvasAmount==0 || canvas[0].getContext){
 
-
-    if (canvas[0].getContext){
-      for (var i = 0; i<canvasAmount; i++) {
-        ctx[i] = canvas[i].getContext('2d');
-      }
-
-      var c_width = $("#canva0").width();
-      var c_height = $("#canva0").height();
+      //var c_width = $("#canva0").width();
+      //var c_height = $("#canva0").height();
+      c_width = $("#canva0").width();
+      c_height = $("#canva0").height();
       var hor_height = c_height/10*6;
       var sun_pos_h, sun_pos_hor, f_day=1, f_desert=0, f_cave=0;
 
       // очищаем холст
-      ctx[0].clearRect(0, 0, c_width, c_height);
+      //ctx[0].clearRect(0, 0, c_width, c_height);
+      for (var i = 0; i<canvasAmount; i++) {
+        ctx[i].body.clearRect(0, 0, c_width, c_height);
+      }
 
       var r_line = rand_line();
 
@@ -603,10 +644,15 @@ if(localStorage.getItem("flag_blur")!= null)
         return arry;
         }
 
-      function make_sky(cl1, cl2, layer){
+      function make_sky(cl1, cl2, layerNum){
 
-        if (layer == undefined) {
-          layer = ctx[0];
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
+        }
+        if (layerNum == "auto") {
+          layer = ctx[createCanvas(-1, "sky")].body;
+        } else {
+          layer = ctx[createCanvas(layerNum, "sky")].body;
         }
         function print_sky(color1, color2){
           if(color1 === undefined)
@@ -625,10 +671,15 @@ if(localStorage.getItem("flag_blur")!= null)
         print_sky(cl1, cl2);
       }
 
-      function make_sun(layer){
+      function make_sun(layerNum){
 
-        if (layer == undefined) {
-          layer = ctx[0];
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
+        }
+        if (layerNum == "auto") {
+          layer = ctx[createCanvas(-1, "sun")].body;
+        } else {
+          layer = ctx[createCanvas(layerNum, "sun")].body;
         }
         function print_sun(pos, radius, color)
         {
@@ -729,10 +780,15 @@ if(localStorage.getItem("flag_blur")!= null)
       }
 
         /// do not insert in...
-      function make_cloud(layer, pos, height, width, color) {
+      function make_cloud(layerNum, pos, height, width, color) {
 
-        if (layer == undefined) {
-          layer = ctx[0];
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
+        }
+        if (layerNum == "auto") {
+          layer = ctx[createCanvas(-1, "cloud")].body;
+        } else {
+          layer = ctx[createCanvas(layerNum, "cloud")].body;
         }
         var count = randd(3,7);
         var radius, cloud;
@@ -781,10 +837,17 @@ if(localStorage.getItem("flag_blur")!= null)
         }
       }
 
-      function draw_clouds(layer) {
+      function draw_clouds(layerNum) {
 
-        if (layer == undefined) {
-          layer = ctx[0];
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
+        }
+        if (layerNum == "auto") {
+          layerNum = createCanvas(-1, "clouds");
+          layer = ctx[layerNum].body;
+        } else {
+          layerNum = createCanvas(layerNum, "clouds");
+          layer = ctx[layerNum].body;
         }
         var cloud_pos = new point();
         var w, h, x, y, n_max=randd(2,6), m_max=randd(4,29);
@@ -798,17 +861,26 @@ if(localStorage.getItem("flag_blur")!= null)
             x = ~~(c_width/m_max*(m+1)-randd(-c_width/m_max, c_width/m_max));
             y = ~~(c_height/20*(n+1)*3-randd(-c_height/m_max, c_height/m_max));
             cloud_pos.set(x, y);
-            make_cloud(layer, cloud_pos, h, w, main_color2);
+            var cloudLayer = +layerNum + + (randd(0,1)>0? 0: 1);
+            make_cloud(cloudLayer, cloud_pos, h, w, main_color2);
             }
           }
         }
       }
 
-      function print_hills(color1, color2, layer, width, height) {
+      function print_hills(color1, color2, layerNum, width, height) {
 
-        if (layer == undefined) {
-          layer = ctx[0];
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
         }
+        if (layerNum == "auto") {
+          layerNum = createCanvas(-1, "hills");
+        } else {
+          layerNum = createCanvas(layerNum, "clouds");
+
+        }
+        layer = ctx[layerNum].body;
+
         if(color1 === undefined)
           color1 = 'rgba(246, 178, 139, 1)';
         if(color2 === undefined)
@@ -844,16 +916,16 @@ if(localStorage.getItem("flag_blur")!= null)
             end.set(parseInt(+start.x+ +width), start.y);
             layer.moveTo(start.x, start.y);
             layer.bezierCurveTo(+start.x + +parseInt(width/4), start.y, +start.x + +parseInt(width/4), mid.y, mid.x, mid.y);
-            //ctx[0].stroke();
+            //ctx[0].body.stroke();
 
             // make cactus here
             var k_cactus = ((range+1)*0.2).toFixed(1);
             if(randd(0,1)>0 && f_desert==1)
-              make_cactus(mid, ~~((15-randd(-2,2))*k_cactus), ~~((50-randd(-20,20))*k_cactus), layer);
-            //ctx[0].stroke();
+              make_cactus(mid, ~~((15-randd(-2,2))*k_cactus), ~~((50-randd(-20,20))*k_cactus), layerNum);
+            //ctx[0].body.stroke();
 
             layer.bezierCurveTo(+start.x + +parseInt(width/4*3), mid.y, +start.x + +parseInt(width/4*3), start.y, end.x, end.y);
-            //ctx[0].stroke();
+            //ctx[0].body.stroke();
 
             if(end.x<c_width)
               make_hill(end, height, width, range, color1, color2);
@@ -890,12 +962,29 @@ if(localStorage.getItem("flag_blur")!= null)
         }
       }
 
-      function make_cave(layer) {
-
-        if (layer == undefined) {
-          layer = ctx[0];
+      function make_cave(layerNum) {
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
         }
-        function make_cave_line(k) {
+        if (layerNum == "auto") {
+          layerNum = createCanvas(-1, "cave")
+        } else {
+          layerNum = createCanvas(layerNumIn, "cave")
+        }
+        layer = ctx[layerNum].body;
+
+         function make_cave_line(k, layerNumIn) {
+          if (layerNumIn == undefined) {
+            layer = ctx[0].body;
+          }
+          if (layerNumIn == "auto") {
+            layerNumIn = createCanvas(-1, "cave")
+            //layer = ctx[layerNum].body;
+          } else {
+            layerNumIn = createCanvas(layerNumIn, "cave")
+            //layer = ctx[layerNum].body;
+          }
+          layer = ctx[layerNumIn].body;
           // count columns amount
           cave_k=k*0.2;
           var height_k = 40*cave_k;
@@ -927,10 +1016,11 @@ if(localStorage.getItem("flag_blur")!= null)
           layer.moveTo(main_arr[0].x, main_arr[0].y);
           for (var i = 1; i < main_arr.length; i++) {
             layer.lineTo(main_arr[i].x, main_arr[i].y);
-            //ctx[0].stroke();
+            //ctx[0].body.stroke();
+            layerNum++;
           }
-          //ctx[0].lineTo(main_arr[0].x, main_arr[0].y);
-          //ctx[0].stroke();
+          //ctx[0].body.lineTo(main_arr[0].x, main_arr[0].y);
+          //ctx[0].body.stroke();
 
           var lingrad = layer.createLinearGradient(0, 0, 0, c_height );
 
@@ -941,15 +1031,21 @@ if(localStorage.getItem("flag_blur")!= null)
           layer.fill();
           /**/
         }
-        var amount= randd(1,5);
-        for(var t=amount; t<8; t++)
-         make_cave_line(t);
+        var amount= randd(4,7);
+        for(var t=amount; t<8; t++) {
+          make_cave_line(t, layerNum);
+        }
       }
 
-      function make_buildings(layer) {
+      function make_buildings(layerNum) {
 
-        if (layer == undefined) {
-          layer = ctx[0];
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
+        }
+        if (layerNum == "auto") {
+          layer = ctx[createCanvas(-1, "city")].body;
+        } else {
+          layer = ctx[createCanvas(layerNum, "city")].body;
         }
         if(randd(-1,2)>0) {
           var hor_delta = c_width/randd(3,5) * (randd(0,1)>0?-1:1);
@@ -968,7 +1064,7 @@ if(localStorage.getItem("flag_blur")!= null)
               layer.lineTo(+base_p.x+ +base_w/2, base_p.y);
               layer.lineTo(base_p.x, base_p.y);
 
-              //ctx[0].stroke();
+              //ctx[0].body.stroke();
               layer.fill();
               if(floor==undefined || floor>1)
                 make_windows(base_p, base_w, base_h);
@@ -995,7 +1091,7 @@ if(localStorage.getItem("flag_blur")!= null)
               }
               layer.lineTo(roof_p.x, roof_p.y);
 
-              //ctx[0].stroke();
+              //ctx[0].body.stroke();
               layer.fill();
 
               if (f_roof == 1) { // гребень на крыше
@@ -1053,7 +1149,7 @@ if(localStorage.getItem("flag_blur")!= null)
 
             //base.set(c_width/2, c_height/3*2);
             var b_width =  ~~(randd(3, 4)*10*k_size);
-            var b_height = ~~(randd(10, 11)*10*k_size/(k_height/3));
+            var b_height = ~~(randd(10, 11) *10 *k_size /(k_height /3));
             var r_width = ~~(randd(b_width/10, b_width/9)*10);
             var r_height = ~~(randd(b_height/30, b_height/10)*10);
             b_height+=80;
@@ -1087,7 +1183,7 @@ if(localStorage.getItem("flag_blur")!= null)
             layer.beginPath();
             layer.moveTo(p.x - width/2, p.y);
             layer.lineTo(p.x - width/2, p.y - height);
-            //ctx[0].lineTo(p.x - width/2, p.y - height);
+            //ctx[0].body.lineTo(p.x - width/2, p.y - height);
             //p.set(p.x - width/2, +p.y+ +(~~(indent_size/2)))
             p.set(p_base.x - width/2+ +(~~(indent_size/2)), +p.y - height );
             layer.lineTo(p.x, p.y);
@@ -1155,25 +1251,59 @@ if(localStorage.getItem("flag_blur")!= null)
 
 
           var building_base = new point();
+          var building_base1 = new point();
+          var building_base2 = new point();
           var b_max = 10;
 /**/
-          for (var i = 0; i < b_max; i++) {
-            var b_center_x = c_width/2 - randd(-c_width/50, c_width/50)*i/2 - hor_delta;
-            var b_center_y = c_height/4*3;
-            building_base.set(b_center_x, b_center_y);
+          if (randd(-1,0)>0) {
+            // town
+            for (var i = 0; i < b_max; i++) {
+              var b_center_x = c_width/2 - randd(-c_width/50, c_width/50)*i/2 - hor_delta;
+              var b_center_y = c_height/4*3;
+              building_base.set(b_center_x, b_center_y);
 
-            make_building(building_base, b_max-i+1, 0.7, i);
+              make_building(building_base, b_max-i+1, 0.7, i);
+            }
+          } else {
+            // castle
+            for (var i = 0; i < b_max/1.8; i++) {
+              var scatter = c_width/randd(60,80)*i;
+              var b_center_x1 = ~~(c_width/2 - hor_delta - scatter);
+              var b_center_x2 = ~~(c_width/2 - hor_delta + scatter);
+              var b_center_y = ~~(c_height/4*3);
+
+              building_base1.set(b_center_x1, b_center_y);
+              building_base2.set(b_center_x2, b_center_y);
+
+              var hg = ~~(i*1.8);
+              if (hg<3)
+                hg=3;
+              make_building(building_base1, hg, 0.7, i);
+              make_building(building_base2, hg, 0.7, i);
+            }
           }
 /**/
           //make_walls(new point(c_width/2, c_height/4*3), c_width/5, Math.max(110, c_height/15));
           make_town_walls(new point(c_width/2 - hor_delta, c_height/4*3 - randd(-10, -5)*5), c_width/5, Math.max(50, c_height/15))
           building_base = null;
+          building_base1 = null;
+          building_base2 = null;
         }
       }
 
-      function make_land(color1, color2, layer) {
-        if (layer == undefined) {
-          layer = ctx[0];
+      function make_frontForest(color1, color2, layerNum){
+        make_land(color1, color2, layerNum);
+        make_forest(color1, color2, layerNum);
+      }
+
+      function make_land(color1, color2, layerNum) {
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
+        }
+        if (layerNum == "auto") {
+          layer = ctx[createCanvas(-1, "land")].body;
+        } else {
+          layer = ctx[createCanvas(layerNum, "land")].body;
         }
         var grd=layer.createLinearGradient(0, c_height*4/5, 0, c_height);
         grd.addColorStop(0, rgba_change(color1, -60));
@@ -1183,10 +1313,16 @@ if(localStorage.getItem("flag_blur")!= null)
         layer.fillRect(0,c_height*4/5,c_width,c_height/5);
       }
 
-      function print_stars(ps_color, layer) {
-        if (layer == undefined) {
-          layer = ctx[0];
+      function print_stars(ps_color, layerNum) {
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
         }
+        if (layerNum == "auto") {
+          layer = ctx[createCanvas(-1, "stars")].body;
+        } else {
+          layer = ctx[createCanvas(layerNum, "stars")].body;
+        }
+
         if(ps_color === undefined)
           var ps_color = "rgba(255,255,255,1)";
 
@@ -1244,10 +1380,18 @@ if(localStorage.getItem("flag_blur")!= null)
         }
       }
 
-      function make_forest(cl1, cl2, layer) {
-        if (layer == undefined) {
-          layer = ctx[0];
+      function make_forest(cl1, cl2, layerNum) {
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
         }
+        if (layerNum == "auto") {
+          layerNum = createCanvas(-1, "forest");
+          layer = ctx[createCanvas(layerNum, "forest")].body;
+        } else {
+          layerNum = createCanvas(layerNum, "forest");
+          layer = ctx[layerNum].body;
+        }
+
         function make_tree_1(cl1, cl2, basis, width, f_leafs){
           if(basis === undefined)
           {
@@ -1335,7 +1479,7 @@ if(localStorage.getItem("flag_blur")!= null)
             layer.lineTo(l_p.x-l_w/2, l_p.y + +l_w/2);
             layer.lineTo(+l_p.x+ +l_w/2, l_p.y + +l_w/2);
             layer.lineTo(l_p.x, l_p.y);
-            //ctx[0].stroke();
+            //ctx[0].body.stroke();
             layer.fillStyle = rgba_change(main_color1, randd(-15,15), randd(3,10)*0.1, -randd(1,5)*3, randd(1,5)*3, -randd(1,5)*3);
             layer.fill();
           }
@@ -1372,13 +1516,9 @@ if(localStorage.getItem("flag_blur")!= null)
           {
 
             x = ~~(c_width/d_max*(d+1) - c_width/(d_max*2) - randd(-c_width/(d_max*4), c_width/(d_max*3)));
-            //y = ~~((c_height*4/5)+ 40 + c_height/(3*s_max*1.2)*s - randd(c_height/(0, c_height/(3*s_max*2))));
             y = ~~((c_height*4/5)+ 40 + c_height/(3*s_max*1.2)*s - randd(-10, 10));
 
-            /*
-            x = ~~(c_width/d_max*(d+1) - c_width/(d_max*2) );
-            y = ~~((c_height*2/3)+ 50 + c_height/(3*s_max*1.2)*s);
-            */
+
             tree_point.set(x, y);
             var cl1 = rgba_change(cl1, randd(-15, 10));
             var cl2 = rgba_change(cl2, randd(-15, 10));
@@ -1389,23 +1529,23 @@ if(localStorage.getItem("flag_blur")!= null)
               make_tree_1(cl1, cl2, tree_point, wid, f_leafs);
               tree_point.x-=randd(90, 150);
               tree_point.y-=-15;
-              make_cloud(layer, tree_point, randd(80, 120), randd(250, 350), rgba_change(cl1, -30, 1));
+              make_cloud(layerNum, tree_point, randd(80, 120), randd(250, 350), rgba_change(cl1, -30, 1));
             }
-            /*/
-            if(rnd==5){
-              tree_point.x-=70;
-              tree_point.y-=15;
-              make_cloud(tree_point, 100, 300, rgba_change(cl1, -30, 0.95));
-            }
-            /**/
+
           }
         }
       }
 
-      function draw_rocks(layer)  {
-        if (layer == undefined) {
-          layer = ctx[0];
+      function draw_rocks(layerNum)  {
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
         }
+        if (layerNum == "auto") {
+          layer = ctx[createCanvas(-1, "rocks")].body;
+        } else {
+          layer = ctx[createCanvas(layerNum, "rocks")].body;
+        }
+
         function make_rock(mr_point, mr_height, mr_width, mr_color1, mr_color2)
           {
           function print_rock(color1, color2, r_pos, r_height, r_width){
@@ -1613,10 +1753,10 @@ if(localStorage.getItem("flag_blur")!= null)
               layer.stroke();
 
               /*/
-              ctx[0].beginPath();
-              ctx[0].rect(r_pos.x-5, r_pos.y-5, 10, 10);
-              ctx[0].fillStyle = "green";
-              ctx[0].fill();
+              ctx[0].body.beginPath();
+              ctx[0].body.rect(r_pos.x-5, r_pos.y-5, 10, 10);
+              ctx[0].body.fillStyle = "green";
+              ctx[0].body.fill();
               /**/
           }
 
@@ -1657,10 +1797,16 @@ if(localStorage.getItem("flag_blur")!= null)
        * @param {number} main height
        *
        */
-      function make_cactus(mc_p1, mc_dt, mc_h, layer){
-        if (layer == undefined) {
-          layer = ctx[0];
+      function make_cactus(mc_p1, mc_dt, mc_h, layerNum){
+        if (layerNum == undefined) {
+          layer = ctx[0].body;
         }
+        if (layerNum == "auto") {
+          layer = ctx[createCanvas(-1, "cactus")].body;
+        } else {
+          layer = ctx[createCanvas(layerNum, "cactus")].body;
+        }
+
         var mc_1 = new point(), mc_2 = new point(), mc_w;
         var db, rb;
         var f_direction = 1;
@@ -1691,8 +1837,8 @@ if(localStorage.getItem("flag_blur")!= null)
         var rb_line = mc_h/3*2 - randd(-rl, rl);
         var f_line = ~~randd(rl, mc_h/4*5);
 
-        //ctx[0].beginPath();
-        //ctx[0].moveTo(mc_1.x, mc_1.y); //strt
+        //ctx[0].body.beginPath();
+        //ctx[0].body.moveTo(mc_1.x, mc_1.y); //strt
           m_x = mc_1.x; m_y = mc_1.y - f_line;
         layer.lineTo(m_x, m_y); //fst line
 
@@ -1751,28 +1897,29 @@ if(localStorage.getItem("flag_blur")!= null)
 
           m_y = mc_1.y;
         layer.lineTo(m_x, m_y); //right trunk line
-        //ctx[0].stroke();
+        //ctx[0].body.stroke();
       }
 
-      make_sky(main_color1, main_color2, ctx[0]);
+      make_sky(main_color1, main_color2, 0);
 /**/
-      print_stars(main_color2, ctx[0]);
-      var sun_color = make_sun(ctx[0]);
+      print_stars(main_color2, 0);
+      var sun_color = make_sun(0);
 
-      draw_clouds(ctx[1]);
-      draw_rocks(ctx[2]);
+      draw_clouds("auto");
+      draw_rocks("auto");
       /**/
-      make_buildings(ctx[3]);
+      make_buildings("auto");
 /**/
-      print_hills(main_color1, main_color2, ctx[4]);
+      print_hills(main_color1, main_color2, "auto");
 
       if(randd(0,1)==1 && f_desert!=1 && f_cave!=1)
       {
-        make_land(main_color1, main_color2, ctx[5]);
-        make_forest(main_color1, main_color2, ctx[5]);
+        make_frontForest(main_color1, main_color2, "auto");
+        //make_land(main_color1, main_color2, "auto");
+        //make_forest(main_color1, main_color2, "auto");
       }
       if (f_cave==1) {
-        make_cave(ctx[6]);
+        make_cave("auto");
       }
 
       /**/
@@ -1915,9 +2062,10 @@ if(localStorage.getItem("flag_blur")!= null)
    console.log(deltaX + " " + deltaY);
 
    var limit = $("#background .canvas").length;
-   var kLayer = 1.05;
+   var kLayer = 0.02;
    kLayer = ~~(Math.max(limit+1, 1)/limit);
    var direction = -1;
+
    if (direction == 1) {
     for (var i = 0; i<limit; i++) {
       $("#background .canvas").eq(i).css(
