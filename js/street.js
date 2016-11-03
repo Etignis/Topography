@@ -1392,7 +1392,18 @@ if(localStorage.getItem("flag_blur")!= null)
           layer = ctx[layerNum].body;
         }
 
-        function make_tree_1(cl1, cl2, basis, width, f_leafs){
+        function make_tree_1(cl1, cl2, basis, width, f_leafs, layerNumTree){
+          if (layerNumTree == undefined) {
+            layerTree = ctx[0].body;
+          }
+          if (layerNumTree == "auto") {
+            layerNumTree = createCanvas(-1, "forest");
+            layerTree = ctx[createCanvas(layerNumTree, "forest")].body;
+          } else {
+            layerNumTree = createCanvas(layerNumTree, "forest");
+            layerTree = ctx[layerNumTree].body;
+          }
+
           if(basis === undefined)
           {
             basis = new point();
@@ -1411,13 +1422,13 @@ if(localStorage.getItem("flag_blur")!= null)
 
             new_p.x = get_point.x;
             new_p.y = get_point.y - tr_height;
-            layer.lineTo(new_p.x, new_p.y);
+            layerTree.lineTo(new_p.x, new_p.y);
             new_p.x = new_p.x-br;
             new_p.y = new_p.y-br;
-            layer.lineTo(new_p.x, new_p.y);
+            layerTree.lineTo(new_p.x, new_p.y);
             new_p.x = +new_p.x+ +br;
             new_p.y = + new_p.y + +br/2;
-            layer.lineTo(new_p.x, new_p.y);
+            layerTree.lineTo(new_p.x, new_p.y);
 
             if(new_p.y>0)
               make_trunk_up(new_p);
@@ -1434,13 +1445,13 @@ if(localStorage.getItem("flag_blur")!= null)
 
             new_p.x = + get_point.x + +br;
             new_p.y = get_point.y - br/2;
-            layer.lineTo(new_p.x, new_p.y);
+            layerTree.lineTo(new_p.x, new_p.y);
             new_p.x = new_p.x - br;
             new_p.y = +new_p.y + +br;
-            layer.lineTo(new_p.x, new_p.y);
+            layerTree.lineTo(new_p.x, new_p.y);
             new_p.x = new_p.x;
             new_p.y = +new_p.y + +tr_height;
-            layer.lineTo(new_p.x, new_p.y);
+            layerTree.lineTo(new_p.x, new_p.y);
 
             if(new_p.y<basis.y - (+root+ +tr_height*1.5))
               make_trunk_down(new_p);
@@ -1448,15 +1459,15 @@ if(localStorage.getItem("flag_blur")!= null)
             {
               //new_p.x = new_p.x;
               new_p.y = basis.y-root;//+new_p.y + +tr_height;
-              layer.lineTo(new_p.x, new_p.y);
+              layerTree.lineTo(new_p.x, new_p.y);
               new_p.x = +new_p.x + +root;
               new_p.y = +new_p.y + +root;
-              layer.lineTo(new_p.x, new_p.y);
+              layerTree.lineTo(new_p.x, new_p.y);
             }
           }
           function make_leafs (ls_p, ls_h) {
-          var l_p=new point();
-          var ls_w=500;
+            var l_p=new point();
+            var ls_w=500;
             for (var i=0; i<11; i++) {
               for (var j=0; j<6; j++) {
                 if(randd(0, 3)>i) {
@@ -1526,10 +1537,12 @@ if(localStorage.getItem("flag_blur")!= null)
             var rnd = randd(0,5);
             if(rnd<2)
             {
-              make_tree_1(cl1, cl2, tree_point, wid, f_leafs);
+              var layerNumTree;
+              (d<d_max/2)?layerNumTree = layerNum:layerNum = +layerNum+ +1;
+              make_tree_1(cl1, cl2, tree_point, wid, f_leafs, layerNumTree);
               tree_point.x-=randd(90, 150);
               tree_point.y-=-15;
-              make_cloud(layerNum, tree_point, randd(80, 120), randd(250, 350), rgba_change(cl1, -30, 1));
+              make_cloud(layerNumTree, tree_point, randd(80, 120), randd(250, 350), rgba_change(cl1, -30, 1));
             }
 
           }
