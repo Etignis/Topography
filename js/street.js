@@ -1117,7 +1117,7 @@ if(localStorage.getItem("flag_blur")!= null)
                 layer.lineTo(win_p.x-win_w/2, win_p.y);
                 layer.fill();
               }
-              var w_h = randd(8, 10);
+              var w_h = randd(10, 15);
               var w_w = ~~(w_h/1.5);
               var w_amount_x = ~~(base_w/w_w -2); // количество окон на этаже
               var w_amount_y = ~~(base_h/w_h -2); // количество этажей
@@ -1132,7 +1132,7 @@ if(localStorage.getItem("flag_blur")!= null)
                     base_p.x - base_w/2 + w_w/2 + base_w/w_amount_x*j,
                     base_p.y - base_h + w_h/2+ base_h/w_amount_y*i
                     );
-                  if(randd(-w_amount_y*w_amount_x, w_amount_y/2)>0)
+                  if(randd(-2, 2)>0)
                     make_window(tmp_p, w_w, w_h);
                 }
               }
@@ -1491,7 +1491,7 @@ if(localStorage.getItem("flag_blur")!= null)
             layer.lineTo(+l_p.x+ +l_w/2, l_p.y + +l_w/2);
             layer.lineTo(l_p.x, l_p.y);
             //ctx[0].body.stroke();
-            layer.fillStyle = rgba_change(main_color1, randd(-15,15), randd(3,10)*0.1, -randd(1,5)*3, randd(1,5)*3, -randd(1,5)*3);
+            layer.fillStyle = rgba_change(main_color1, randd(-15,15), randd(10,10)*0.1, -randd(1,5)*3, randd(1,5)*3, -randd(1,5)*3);
             layer.fill();
           }
 
@@ -2067,32 +2067,32 @@ if(localStorage.getItem("flag_blur")!= null)
    // console.log("X: " + X + " Y: " + Y); // вывод результата в консоль
 
    var deltaX = c_width/2 - X;
-   deltaX = ~~((deltaX*100/(c_width))/7);
+   deltaX = ((deltaX*100/(c_width))/20);
 
    var deltaY = c_height*2/3 - Y;
-   deltaY = ~~((deltaY*100/(c_height))/11);
-   //delta = Math.max(40, c_width/40)/delta;
-   console.log(deltaX + " " + deltaY);
+   deltaY = ((deltaY*100/(c_height))/25);
+   //console.log(deltaX + " " + deltaY);
 
    var limit = $("#background .canvas").length;
    var kLayer = 0.02;
    kLayer = ~~(Math.max(limit+1, 1)/limit);
    var direction = -1;
 
+
    if (direction == 1) {
     for (var i = 0; i<limit; i++) {
       $("#background .canvas").eq(i).css(
         {
-          "left": deltaX*i*kLayer,
-          "top": deltaY*i*kLayer
+          "left": (deltaX*i*kLayer).toFixed(1)+"px"+"px",
+          "top": (deltaY*i*kLayer).toFixed(1)+"px"
         });
     }
    } else {
      for (var i = 0; i<limit; i++) {
       $("#background .canvas").eq(i).css(
         {
-          "left": deltaX*(limit-i)*kLayer,
-          "top": deltaY*(limit-i)*kLayer
+          "left": (deltaX*(limit-i)*kLayer).toFixed(1)+"px",
+          "top": (deltaY*(limit-i)*kLayer).toFixed(1)+"px"
         });
     }
    }
