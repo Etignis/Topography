@@ -53,6 +53,22 @@ button img, .i-qw, .i-rf{
   -ms-filter: blur(5px);
   filter: blur(5px);
 }
+
+#confWin{
+    .frame(1px);
+    display: table;
+    font-size: 140%;
+    margin: 1em;
+    background: white;
+    padding: 1em;
+    label{
+        cursor: pointer;
+    }
+}
+.center{
+    text-align: center;
+}
+
 #milepost{
     font-size: 40px;
     width: 100%;
@@ -117,20 +133,7 @@ button img, .i-qw, .i-rf{
             border-left-color: inherit;
             border-bottom-color: inherit;
         }
-        /*
-        &:after{  
-            @h: @w - .1em;
-            content: "";
-            position: absolute;
-            right: -@h/2 ;
-            top: (@h - 1.1em)/2;
-            width: @h;
-            height: @h;
-            background: #eaab68;
-            z-index: 5;
-            transform: rotate(45deg);
-        }
-        */
+       
     }   
     #milepost_pole{
         margin: 0 auto;
@@ -146,7 +149,7 @@ button img, .i-qw, .i-rf{
         }
     
 }
-@media only screen and (max-width: 600px),  screen and (max-height: 600px){
+@media only screen and (max-width: 600px),  screen and (max-height: 500px){
     #milepost{
         position: relative;
         margin-top: .5em;
@@ -161,5 +164,18 @@ button img, .i-qw, .i-rf{
         #milepost_pole{
             display: none;
         }    
+    }
+    #confWin{      
+       .frame(1px);
+        font-size: 140%;
+        background: white;
+        padding: 1em;
+        margin: 0;
+        label{
+            cursor: pointer;
+        }
+    }
+    .center{
+        text-align: left;
     }
 }

@@ -347,6 +347,27 @@ button img,
   -ms-filter: blur(5px);
   filter: blur(5px);
 }
+#confWin {
+  -webkit-border-radius: 3px 3px 3px 3px;
+  -moz-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
+  overflow: visible;
+  background: #fff;
+  border: 1px solid #d8d8d8;
+  border-bottom-width: 2px;
+  border-top-width: 0px;
+  display: table;
+  font-size: 140%;
+  margin: 1em;
+  background: white;
+  padding: 1em;
+}
+#confWin label {
+  cursor: pointer;
+}
+.center {
+  text-align: center;
+}
 #milepost {
   font-size: 40px;
   width: 100%;
@@ -380,20 +401,6 @@ button img,
   transform-style: preserve-3d;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  /*
-        &:after{  
-            @h: @w - .1em;
-            content: "";
-            position: absolute;
-            right: -@h/2 ;
-            top: (@h - 1.1em)/2;
-            width: @h;
-            height: @h;
-            background: #eaab68;
-            z-index: 5;
-            transform: rotate(45deg);
-        }
-        */
 }
 #milepost #milepost_label:before {
   content: "";
@@ -420,7 +427,7 @@ button img,
   position: relative;
   top: -2px;
 }
-@media only screen and (max-width: 600px), screen and (max-height: 600px) {
+@media only screen and (max-width: 600px), screen and (max-height: 500px) {
   #milepost {
     position: relative;
     margin-top: .5em;
@@ -435,6 +442,26 @@ button img,
   }
   #milepost #milepost_pole {
     display: none;
+  }
+  #confWin {
+    -webkit-border-radius: 3px 3px 3px 3px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    border-radius: 3px 3px 3px 3px;
+    overflow: visible;
+    background: #fff;
+    border: 1px solid #d8d8d8;
+    border-bottom-width: 2px;
+    border-top-width: 0px;
+    font-size: 140%;
+    background: white;
+    padding: 1em;
+    margin: 0;
+  }
+  #confWin label {
+    cursor: pointer;
+  }
+  .center {
+    text-align: left;
   }
 }
 
