@@ -26,42 +26,22 @@ button img, .i-qw, .i-rf{
     right: 0;
     z-index: -1;
     
-    /*
-    -webkit-filter: blur(5px);
-  -moz-filter: blur(5px);
-  -o-filter: blur(5px);
-  -ms-filter: blur(5px);
-  filter: blur(5px);
-  */
-    #canva,
-    #canva1,
-    #canva2{
-        position :absolute;
+    background: #333;
+    background: url("../img/f1.jpg") center center;
+    background-size: cover;
+    
+    @animT: .5s;
+    .canvas{
+        position: absolute;
         width: 106%;
         height: 106%;
         margin-left: -3%;
         margin-top: -3%;
         left: 0;
         top: 0;
-        transition: position .1s ease-out 0;
-    }
-    #canva{
-        /*position: absolute; 
-        left:0;
-        right:0;
-        top:0;
-        bottom:0;
-        */
-        /*
-        width: 100%;
-        height: 100%;
-        */
-        background: #333;
-        background: url("../img/f1.jpg") center center;
-        background-size: cover;
-        //opacity: .8;
-        //display: none;
-    }
+        transition: left @animT ease-out, top @animT ease-out;
+        }  
+        
     #c_work{
         background: #000;
     }

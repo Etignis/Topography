@@ -307,14 +307,6 @@ if(localStorage.getItem("flag_blur")!= null)
 
     m_color1 = rgba_average(m_color1, s_color1);
     m_color2 = rgba_average(m_color2, s_color2);
-    /*
-    var grad = "linear-gradient(135deg, transparent, rgba(234, 171, 104, 1) 80%),"+
-    "linear-gradient(135deg, rgba(183, 126, 65, .9), transparent 2em),"+
-    "repeating-linear-gradient("+(tz-1)+"deg, transparent, transparent 5px, rgba("+(cr+tx-deg)+", "+(cg+ty-deg)+", "+(cb+tz-deg)+", .9) 23px) 0 "+tx*deg+"px,"+
-    "repeating-linear-gradient("+(tz-3)+"deg, transparent, transparent 7px, rgba("+(cr+ty-deg)+", "+(cg+tz-deg)+", "+(cb+tx-deg)+", .9) 19px) 0 "+ty*deg+"px,"+
-    "repeating-linear-gradient("+(tz-2)+"deg, transparent, transparent 11px, rgba("+(cr+tz-deg)+", "+(cg+tx-deg)+", "+(cb+ty-deg)+", .9) 17px) 0 "+tz*deg+"px,"+
-    "rgba("+(cr-tx-ty)+", "+(cg-tx-ty)+", "+(cb-tx-ty)+", 1)";
-    */
 
     //console.log("grad: "+grad);
     function set_grad(clr1, clr2)
@@ -337,24 +329,19 @@ if(localStorage.getItem("flag_blur")!= null)
         "repeating-linear-gradient("+(tz-3)+"deg, transparent, transparent 7px, "+color2+" 19px) 0 "+ty*deg+"px,"+
         "repeating-linear-gradient("+(tz-2)+"deg, transparent, transparent 11px, "+color2+" 17px) 0 "+tz*deg+"px,"+
         color1;
+				text_color = rgba_change(text_color, -10);
 
       $("#milepost_label").attr('style', "transform: rotate3d("+tx+", "+ty+", "+tz+", "+deg+"deg); background: "+grad + "; border-color: "+color_new+"; color: "+text_color+";");
-
-      //$("#milepost_label").after("<div style='background: "+rgba_average(color1, st_color1, 9)+"'> _ </div> <div style='background: "+rgba_average(color1, st_color1, 5)+"'> _ </div> <div style='background: "+rgba_average(color1, st_color1, 5)+"'> _ </div> <div style='background: "+rgba_average(color1, st_color1, 1)+"'> _ </div> ");
-
       }
       var grad = get_grad(clr1, clr2);
-
-
     }
     set_grad(color.clr1, color.clr2);
 
     $("#milepost_pole").attr('style', "background: linear-gradient(135deg, "+rgba_change(color.clr2, 0, 0.3)+", "+rgba_change(color.clr1, 0, 0.3)+" 80%), linear-gradient(to top, transparent 70%, #b77435), repeating-linear-gradient("+(tx+83)+"deg, transparent, transparent 5px, rgba("+(cr+tz-deg)+", "+(cg+tx-deg)+", "+(cb+ty-deg)+", .3) 17px) "+tz*deg+"px 0, repeating-linear-gradient("+(tx+80)+"deg, transparent, transparent 3px, rgba("+(cr+tx-deg)+", "+(cg+ty-deg)+", "+(cb+tz-deg)+", .6) 19px) "+ty*deg+"px 0, rgba(234, 171, 104, 1)");
-    //bbc = rgba_change(color.clr1, 0, 0.3);
-    //$("#milepost #milepost_label:before").css('top', 0);
 
     var b_sky = randd(1,4);
     var b_land = randd(1,4);
+		paralax();
     }
 
   function point(x, y) {
@@ -2022,9 +2009,6 @@ if(localStorage.getItem("flag_blur")!= null)
   make_generator();
   show_milepost(make_town(), 'result');
 
-
-
-
   $("body").on("click", "#info", function(){
     if($("#dbg").length<1)
     {
@@ -2059,44 +2043,60 @@ if(localStorage.getItem("flag_blur")!= null)
     return false;
   });
 
+
+	function paralax(e) {
+		if (e!=undefined) {			
+			var X = e.pageX; // положения по оси X
+			var Y = e.pageY; // положения по оси Y
+			var c_width = $("#canva0").width();
+			var c_height = $("#canva0").height();
+			// console.log("X: " + X + " Y: " + Y); // вывод результата в консоль
+
+			var deltaX = c_width/2 - X;
+			deltaX = ((deltaX*100/(c_width))/20);
+
+			var deltaY = c_height*2/3 - Y;
+			deltaY = ((deltaY*100/(c_height))/25);
+			//console.log(deltaX + " " + deltaY);
+
+			var limit = $("#background .canvas").length;
+			var kLayer = 0.02;
+			kLayer = ~~(Math.max(limit+1, 1)/limit);
+			var direction = -1;
+
+
+			if (direction == 1) {
+				for (var i = 0; i<limit; i++) {
+					$("#background .canvas").eq(i).css(
+						{
+							"left": (deltaX*i*kLayer).toFixed(1)+"px"+"px",
+							"top": (deltaY*i*kLayer).toFixed(1)+"px"
+						});
+				}
+			} else {
+				for (var i = 0; i<limit; i++) {
+					$("#background .canvas").eq(i).css(
+						{
+							"left": (deltaX*(limit-i)*kLayer).toFixed(1)+"px",
+							"top": (deltaY*(limit-i)*kLayer).toFixed(1)+"px"
+						});
+				}
+			}
+		}	
+		
+	}// paralax
+	
+	var f_mouseMove = null;
   $('body').mousemove( function (e) {
-    var X = e.pageX; // положения по оси X
-    var Y = e.pageY; // положения по оси Y
-    var c_width = $("#canva0").width();
-    var c_height = $("#canva0").height();
-   // console.log("X: " + X + " Y: " + Y); // вывод результата в консоль
-
-   var deltaX = c_width/2 - X;
-   deltaX = ((deltaX*100/(c_width))/20);
-
-   var deltaY = c_height*2/3 - Y;
-   deltaY = ((deltaY*100/(c_height))/25);
-   //console.log(deltaX + " " + deltaY);
-
-   var limit = $("#background .canvas").length;
-   var kLayer = 0.02;
-   kLayer = ~~(Math.max(limit+1, 1)/limit);
-   var direction = -1;
-
-
-   if (direction == 1) {
-    for (var i = 0; i<limit; i++) {
-      $("#background .canvas").eq(i).css(
-        {
-          "left": (deltaX*i*kLayer).toFixed(1)+"px"+"px",
-          "top": (deltaY*i*kLayer).toFixed(1)+"px"
-        });
-    }
-   } else {
-     for (var i = 0; i<limit; i++) {
-      $("#background .canvas").eq(i).css(
-        {
-          "left": (deltaX*(limit-i)*kLayer).toFixed(1)+"px",
-          "top": (deltaY*(limit-i)*kLayer).toFixed(1)+"px"
-        });
-    }
-   }
-
-});
+		if (f_mouseMove == null) 
+		{
+		f_mouseMove = setTimeout(function() {
+			paralax(e);
+			f_mouseMove = null;
+			console.log("timer destroi");
+			}, 200);
+		console.log("timer: " + f_mouseMove);
+		}   
+	});
 
 });
