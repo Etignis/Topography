@@ -3,6 +3,11 @@ $(document).ready(function(){
 var f={};
 
 function getSettings() {
+  f.generateBG = {};
+  f.paralax = {};
+  f.blur = {};
+  f.showLabel = {};
+
   f.generateBG.val = true;
   f.paralax.val = true;
   f.blur.val = true;
@@ -82,10 +87,12 @@ if(localStorage.getItem("flag_blur")!= null)
 	}
 
     function makeSettingWin() {
+       console.dir(f);
       var inputs = '';
         for (var prop in f) {
-          var checked = f[prop].val? 'checked': ''
-            inputs += "<label><input type='checkbox' id='ch"+f[prop].name+"' "+checked+" data-flag='"+f[prop].name+"'> "+f[prop].text+"</label><br>";
+          var checked = f[prop].val == 'true'? 'checked': '';
+          inputs += "<label><input type='checkbox' id='ch"+f[prop].name+"' "+checked+" data-flag='"+f[prop].name+"'> "+f[prop].text+"</label><br>";
+          console.log(f[prop].name + ": "+ f[prop].val);
         }
 
         var configWin="<div id='confWin' style='display: none'><div class='cont'>"+inputs+"</div><div class='center'><button id='bConfOk'>OK</button></div></div>";
