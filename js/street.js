@@ -1,8 +1,40 @@
 $(document).ready(function(){
 
 var f={};
-f.generateBG=true;
-f.paralax=true;
+
+function getSettings() {
+  f.generateBG.val = true;
+  f.paralax.val = true;
+  f.blur.val = true;
+  f.showLabel.val = true;
+
+  f.generateBG.name = 'generateBG';
+  f.paralax.name = 'paralax';
+  f.blur.name = 'blur';
+  f.showLabel.name = 'showLabel';
+
+  f.generateBG.text = "Генерировать фон";
+  f.paralax.text  = "Использовать паралакс";
+  f.blur.text  = "Применять размытие";
+  f.showLabel.text  = "Отображать табличку";
+
+  if(localStorage.getItem("flag_generateBG")!= null)
+    f.generateBG.val = localStorage.getItem("flag_generateBG");
+  if(localStorage.getItem("flag_paralax")!= null)
+    f.paralax.val = localStorage.getItem("flag_paralax");
+  if(localStorage.getItem("flag_blur")!= null)
+    f.blur.val = localStorage.getItem("flag_blur");
+  if(localStorage.getItem("flag_showLabel")!= null)
+    f.showLabel.val = localStorage.getItem("flag_showLabel");
+}
+function setSettings() {
+  localStorage.setItem("flag_generateBG", f.generateBG.val);
+  localStorage.setItem("flag_paralax", f.paralax.val);
+  localStorage.setItem("flag_blur", f.blur.val);
+  localStorage.setItem("flag_showLabel", f.showLabel.val);
+}
+getSettings();
+
 // перемешивание
 function shuffle(o){
     for(var j, x, k = o.length; k; j = Math.floor(Math.random() * k), x = o[--k], o[k] = o[j], o[j] = x);
@@ -36,7 +68,7 @@ function rand_line(num){
 var IMF_RF="<i class='fa  fa-refresh'></i>";
 var IMF_QW="<i class='fa fa-question-circle'></i>";
 //////////////
-var bg_blur = 1, milepost_visible = 1;
+//var bg_blur = 1, milepost_visible = 1;
 if(localStorage.getItem("flag_blur")!= null)
   bg_blur = localStorage.getItem("flag_blur");
 
@@ -45,11 +77,24 @@ if(localStorage.getItem("flag_blur")!= null)
 		var generator="<a href='http://youknowwho.ru/dnd' class='bt'><i class='fa fa-home'></i></a><!--button class='bt' id='go'>Сгенерировать улицу</button--><button class='bt' id='town_name'>Сгенерировать название</button><!--button id='rnd' class='bt'>Перегенерировать</button--><a class='bt' href='http://www.youknowwho.ru/message/?theme=dndstreet' target='_blank'>Написать отзыв или предложение</a><a href='#' class='bt' id='config'><i class='fa fa-cog'></i></a>";
     $("#panel").html(generator);
 
-		var chGenerate = "<label><input type='checkbox' id='chGenerate' checked data-flag='generateBG'> Генерировать фон</label><br>";
-		var chParalax = "<label><input type='checkbox' id='chParalax' checked checked data-flag='paralax'> Использовать паралакс</label><br>";
-		var configWin="<div id='confWin' style='display: none'>"+chGenerate+chParalax+"<div class='center'><button id='bConfOk'>OK</button></div></div>";
-		$("body").append(configWin);
+
+    makeSettingWin();
 	}
+
+    function makeSettingWin() {
+      var inputs = '';
+        for (var prop in f) {
+          var checked = f[prop].val? 'checked': ''
+            inputs += "<label><input type='checkbox' id='ch"+f[prop].name+"' "+checked+" data-flag='"+f[prop].name+"'> "+f[prop].text+"</label><br>";
+        }
+
+        var configWin="<div id='confWin' style='display: none'><div class='cont'>"+inputs+"</div><div class='center'><button id='bConfOk'>OK</button></div></div>";
+        if($("#confWin").length<1)
+            $("body").append(configWin);
+        else
+            $("#confWin .cont").html(inputs);
+    }
+
   function add_info_spoiler(){
     $(".description").after("<a href='#' class='info_toggle'>Скрыть описание</a>");
   }
@@ -437,7 +482,7 @@ if(localStorage.getItem("flag_blur")!= null)
     var canvas = [];
     var ctx = [];
   function make_back_2() {
-		if(f.generateBG) {
+		if(f.generateBG.val) {
 			//$("#background").css({'background': 'url("img/f1.jpg") center center', 'background-size': 'cover', "opacity": ".8"});
 			/*
 			sky, stars, sun
@@ -1955,7 +2000,7 @@ if(localStorage.getItem("flag_blur")!= null)
     var color_overlay = make_back_2();
     //console.log("c_o: "+color_overlay);
     make_texture(color_overlay);
-    if(bg_blur ==1)
+    if(f.blur.val)
       $("#background").attr('class', 'blur');
   }
 
@@ -1970,28 +2015,28 @@ if(localStorage.getItem("flag_blur")!= null)
      if($("#background").attr('class') == 'blur')
      {
        $("#background").removeAttr('class');
-       bg_blur = 0;
+       f.blur.val = false;
      }
      else
      {
        $("#background").attr('class', 'blur');
-       bg_blur = 1;
+       f.blur.val = true;
      }
-    localStorage.setItem("flag_blur", bg_blur);
+    localStorage.setItem("flag_blur", f.blur.val);
    }
    if(eventObject.which == 192) //~
    {
      if($("#result").is(':visible'))
      {
        $("#result").hide();
-       milepost_visible = 0;
+       f.showLabel.val = false;
      }
      else
      {
        $("#result").show();
-       milepost_visible = 1;
+       f.showLabel.val = true;
      }
-    localStorage.setItem("flag_milepost", milepost_visible);
+    localStorage.setItem("flag_showLabel", f.showLabel.val);
    }
    if(eventObject.which == 32 || eventObject.which == 13) //Space Enter
    {
@@ -2052,7 +2097,10 @@ if(localStorage.getItem("flag_blur")!= null)
     return false;
   });
 
+    // показать настройки
 	$("body").on("click", "#config", function(){
+    //getSettings();
+    makeSettingWin();
 		$("#confWin").fadeToggle();
 	});
 	$("body").on("click", "#bConfOk", function(){
@@ -2062,17 +2110,17 @@ if(localStorage.getItem("flag_blur")!= null)
 	$("body").on("click", "#confWin input", function(){
 		var data_flag = $(this).attr("data-flag");
 		if ($(this).prop('checked')) {
-			f[data_flag]=true
+			f[data_flag].val=true
 		} else {
-			f[data_flag]=false;
+			f[data_flag].val=false;
 		}
-		console.log(f[data_flag]);
-		console.log(f.generateBG);
-		console.log(f.paralax);
+		console.log(f[data_flag].val);
+
+    setSettings();
 	});
 
 	function paralax(e) {
-		if (e!=undefined && f.paralax) {			
+		if (e!=undefined && f.paralax.val) {
 			var X = e.pageX; // положения по оси X
 			var Y = e.pageY; // положения по оси Y
 			var c_width = $("#canva0").width();
@@ -2109,13 +2157,13 @@ if(localStorage.getItem("flag_blur")!= null)
 						});
 				}
 			}
-		}	
-		
+		}
+
 	}// paralax
-	
+
 	var f_mouseMove = null;
   $('body').mousemove( function (e) {
-		if (f_mouseMove == null) 
+		if (f_mouseMove == null)
 		{
 		f_mouseMove = setTimeout(function() {
 			paralax(e);
@@ -2123,7 +2171,7 @@ if(localStorage.getItem("flag_blur")!= null)
 			//console.log("timer destroi");
 			}, 200);
 		//console.log("timer: " + f_mouseMove);
-		}   
+		}
 	});
 
 });
