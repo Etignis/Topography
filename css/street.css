@@ -118,6 +118,26 @@ body {
 img {
   border: none;
 }
+button {
+  -webkit-border-radius: 3px 3px 3px 3px;
+  -moz-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
+  overflow: visible;
+  background: #fff;
+  border: 1px solid #d8d8d8;
+  border-bottom-width: 2px;
+  border-top-width: 1px;
+  box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  padding: .9em 1.6em;
+  margin: .5em .5em 0em;
+  background: #fdfdfd;
+  transition: box-shadow 0.3s, background 0.3s;
+}
+button:hover {
+  background: #f9f9f9;
+  box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.2);
+}
 .mod_win {
   -webkit-border-radius: 3px 3px 3px 3px;
   -moz-border-radius: 3px 3px 3px 3px;

@@ -29,6 +29,20 @@ body {
 img{
 	border: none;
 }
+button{
+    .frame(1px, 2px, 1px);
+    box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    padding: .9em 1.6em;
+    margin: .5em .5em 0em;
+    background: #fdfdfd;
+    transition: box-shadow .3s, background .3s;
+    
+    &:hover{
+        background: #f9f9f9;
+        box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.2);
+    }
+}
 
 .mod_win{
     .fr-concave;

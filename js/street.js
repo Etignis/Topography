@@ -24,13 +24,13 @@ function getSettings() {
   f.showLabel.text  = "Отображать табличку";
 
   if(localStorage.getItem("flag_generateBG")!= null)
-    f.generateBG.val = localStorage.getItem("flag_generateBG");
+    f.generateBG.val = localStorage.getItem("flag_generateBG")=='true'?true:false;
   if(localStorage.getItem("flag_paralax")!= null)
-    f.paralax.val = localStorage.getItem("flag_paralax");
+    f.paralax.val = localStorage.getItem("flag_paralax")=='true'?true:false;
   if(localStorage.getItem("flag_blur")!= null)
-    f.blur.val = localStorage.getItem("flag_blur");
+    f.blur.val = localStorage.getItem("flag_blur")=='true'?true:false;
   if(localStorage.getItem("flag_showLabel")!= null)
-    f.showLabel.val = localStorage.getItem("flag_showLabel");
+    f.showLabel.val = true;//localStorage.getItem("flag_showLabel")=='true'?true:false;
 }
 function setSettings() {
   localStorage.setItem("flag_generateBG", f.generateBG.val);
@@ -50,8 +50,7 @@ function randd(min, max) {
 
   return rnd;
 };
-function rand_sign()
-{
+function rand_sign(){
   if(randd(0,99)>50)
     return 1;
   else
@@ -90,7 +89,7 @@ if(localStorage.getItem("flag_blur")!= null)
        console.dir(f);
       var inputs = '';
         for (var prop in f) {
-          var checked = f[prop].val == 'true'? 'checked': '';
+          var checked = f[prop].val? 'checked': '';
           inputs += "<label><input type='checkbox' id='ch"+f[prop].name+"' "+checked+" data-flag='"+f[prop].name+"'> "+f[prop].text+"</label><br>";
           console.log(f[prop].name + ": "+ f[prop].val);
         }
@@ -348,6 +347,11 @@ if(localStorage.getItem("flag_blur")!= null)
   }
 
   function make_texture(color) {
+		if(color==undefined){
+			color={};
+			color.clr1 = 'rgba(140,70,4,1)';
+			color.clr2 = 'rgba(250,200,130,1)';
+		}
     var deg = randd(-9,9);
     var tx = randd(1,19);
     var ty = randd(1,19);
@@ -2008,42 +2012,62 @@ if(localStorage.getItem("flag_blur")!= null)
     //console.log("c_o: "+color_overlay);
     make_texture(color_overlay);
     if(f.blur.val)
-      $("#background").attr('class', 'blur');
+      $("#background").addClass('blur');
+		else
+			$("#background").removeClass('blur');
   }
 
   $(window).resize(function(){
     make_back_2();
   });
 
+	function setBlur(val) {
+		if(val==undefined)
+			val = true;
+		if(val=='toggle'){
+			 if($("#background").hasClass('blur'))
+				 val = false
+			 else
+				 val = true;
+		}	
+		
+		if(val){
+			$("#background").addClass('blur');
+			f.blur.val = true;
+		} else {
+			$("#background").removeClass('blur');
+			f.blur.val = false;
+		}
+		 localStorage.setItem("flag_blur", f.blur.val);
+	}
+	function setLabel(val){
+		if(val==undefined)
+			val = true;
+		if(val=='toggle'){
+			 if($("#result").is(':visible'))
+				 val = false
+			 else
+				 val = true;
+		}	
+		
+		if(val){
+			$("#result").show();
+      f.showLabel.val = true;
+		} else {
+			$("#result").hide();
+      f.showLabel.val = false;
+		}
+		localStorage.setItem("flag_showLabel", f.showLabel.val);
+	}
   $('body').keyup(function(eventObject){
    //alert('Клавиша клавиатуры приведена в нажатое состояние. Код вводимого символа - ' + eventObject.which);
    if(eventObject.which == 16) // Shift
    {
-     if($("#background").attr('class') == 'blur')
-     {
-       $("#background").removeAttr('class');
-       f.blur.val = false;
-     }
-     else
-     {
-       $("#background").attr('class', 'blur');
-       f.blur.val = true;
-     }
-    localStorage.setItem("flag_blur", f.blur.val);
+		 setBlur('toggle');		
    }
    if(eventObject.which == 192) //~
    {
-     if($("#result").is(':visible'))
-     {
-       $("#result").hide();
-       f.showLabel.val = false;
-     }
-     else
-     {
-       $("#result").show();
-       f.showLabel.val = true;
-     }
-    localStorage.setItem("flag_showLabel", f.showLabel.val);
+		 setLabel('toggle');		 
    }
    if(eventObject.which == 32 || eventObject.which == 13) //Space Enter
    {
@@ -2062,8 +2086,8 @@ if(localStorage.getItem("flag_blur")!= null)
   $("body").on("click", "#town_name", function(){
 
 
-    $("#result").html("");
-    show_milepost(make_town(), 'result');
+  $("#result").html("");
+  show_milepost(make_town(), 'result');
 
 
   });
@@ -2117,10 +2141,16 @@ if(localStorage.getItem("flag_blur")!= null)
 	$("body").on("click", "#confWin input", function(){
 		var data_flag = $(this).attr("data-flag");
 		if ($(this).prop('checked')) {
-			f[data_flag].val=true
+			f[data_flag].val=true;
 		} else {
 			f[data_flag].val=false;
 		}
+		
+		if(data_flag=='blur')
+			setBlur(f[data_flag].val)
+		if(data_flag=='showLabel')
+			setLabel(f[data_flag].val)
+		
 		console.log(f[data_flag].val);
 
     setSettings();
