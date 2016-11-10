@@ -1589,7 +1589,7 @@ if(localStorage.getItem("flag_blur")!= null)
 							if(rnd<2)
 							{
 								var layerNumTree;
-								(d<d_max/2)?layerNumTree = layerNum:layerNum = +layerNum+ +1;
+								(s<s_max/2)?layerNumTree = layerNum:layerNumTree = +layerNum+ +1;
 								make_tree_1(cl1, cl2, tree_point, wid, f_leafs, layerNumTree);
 								tree_point.x-=randd(90, 150);
 								tree_point.y-=-15;
@@ -2168,7 +2168,7 @@ if(localStorage.getItem("flag_blur")!= null)
 			var deltaY = c_height*2/3 - Y;
 
       var transitionDuration = 0.5;
-      transitionDuration = (Math.abs(Math.max(deltaX, deltaY)*transitionDuration)/(c_width/2) +0.04).toFixed(1);
+      transitionDuration = (Math.abs(Math.max(deltaX, deltaY)*transitionDuration)/(c_width/2) +0.07).toFixed(2);
       //var k_td = c_width/2 / Math.abs(Math.max(deltaX, deltaY));
       //transitionDuration = 0.5/k_td;
       console.log("transitionDuration: "+transitionDuration);
@@ -2209,11 +2209,11 @@ if(localStorage.getItem("flag_blur")!= null)
 
 	var f_mouseMove = null;
   $('body').mousemove( function (e) {
-    console.log("mouse move");
+    //console.log("mouse move");
 		if (f_mouseMove != null) {
       f_mouseMove = null;
     } else 	{
-    console.log("timer start");
+    //console.log("timer start");
 		f_mouseMove = setTimeout(function() {
 			paralax(e);
 			f_mouseMove = null;
