@@ -1654,9 +1654,6 @@ if(localStorage.getItem("flag_blur")!= null)
 								x_r=~~(randd(-rr,-rr/2)*mod);
 								y_r=~~(randd(rr,rr/2));
 
-
-								//x_r= -rr*mod;
-								//y_r= -rr;
 								if(h>0)
 								{
 									y_r -= rr;
@@ -1849,7 +1846,7 @@ if(localStorage.getItem("flag_blur")!= null)
 						dr_bottom.set(dr_b_x, dr_b_y);
 						dr_h_rnd = randd(-c_height/6, c_height/6);
 						dr_h = ~~(c_height/2 - dr_h_rnd);
-						console.log("r height: "+dr_h);
+						//console.log("r height: "+dr_h);
 						dr_w = ~~(dr_h*1.4 - randd(-c_width/6, c_width/46));
 						make_rock(dr_bottom, dr_h, dr_w, clr11, clr22);
 						}
