@@ -2210,8 +2210,10 @@ if(localStorage.getItem("flag_blur")!= null)
 	var f_mouseMove = null;
   $('body').mousemove( function (e) {
     //console.log("mouse move");
-		if (f_mouseMove != null) {
+		if (f_mouseMove != null &&
+      f_mouseMove != undefined) {
       f_mouseMove = null;
+      //f_mouseMove = clearInterval(f_mouseMove);
     } else 	{
     //console.log("timer start");
 		f_mouseMove = setTimeout(function() {
