@@ -2029,8 +2029,8 @@ if(localStorage.getItem("flag_blur")!= null)
 				 val = false
 			 else
 				 val = true;
-		}	
-		
+		}
+
 		if(val){
 			$("#background").addClass('blur');
 			f.blur.val = true;
@@ -2048,8 +2048,8 @@ if(localStorage.getItem("flag_blur")!= null)
 				 val = false
 			 else
 				 val = true;
-		}	
-		
+		}
+
 		if(val){
 			$("#result").show();
       f.showLabel.val = true;
@@ -2063,11 +2063,11 @@ if(localStorage.getItem("flag_blur")!= null)
    //alert('Клавиша клавиатуры приведена в нажатое состояние. Код вводимого символа - ' + eventObject.which);
    if(eventObject.which == 16) // Shift
    {
-		 setBlur('toggle');		
+		 setBlur('toggle');
    }
    if(eventObject.which == 192) //~
    {
-		 setLabel('toggle');		 
+		 setLabel('toggle');
    }
    if(eventObject.which == 32 || eventObject.which == 13) //Space Enter
    {
@@ -2145,12 +2145,12 @@ if(localStorage.getItem("flag_blur")!= null)
 		} else {
 			f[data_flag].val=false;
 		}
-		
+
 		if(data_flag=='blur')
 			setBlur(f[data_flag].val)
 		if(data_flag=='showLabel')
 			setLabel(f[data_flag].val)
-		
+
 		console.log(f[data_flag].val);
 
     setSettings();
@@ -2165,9 +2165,16 @@ if(localStorage.getItem("flag_blur")!= null)
 			// console.log("X: " + X + " Y: " + Y); // вывод результата в консоль
 
 			var deltaX = c_width/2 - X;
-			deltaX = ((deltaX*100/(c_width))/20);
-
 			var deltaY = c_height*2/3 - Y;
+
+      var transitionDuration = 0.5;
+      transitionDuration = (Math.abs(Math.max(deltaX, deltaY)*transitionDuration)/(c_width/2) +0.04).toFixed(1);
+      //var k_td = c_width/2 / Math.abs(Math.max(deltaX, deltaY));
+      //transitionDuration = 0.5/k_td;
+      console.log("transitionDuration: "+transitionDuration);
+
+
+      deltaX = ((deltaX*100/(c_width))/20);
 			deltaY = ((deltaY*100/(c_height))/25);
 			//console.log(deltaX + " " + deltaY);
 
@@ -2181,6 +2188,7 @@ if(localStorage.getItem("flag_blur")!= null)
 				for (var i = 0; i<limit; i++) {
 					$("#background .canvas").eq(i).css(
 						{
+              "transition-duration": transitionDuration+"s",
 							"left": (deltaX*i*kLayer).toFixed(1)+"px"+"px",
 							"top": (deltaY*i*kLayer).toFixed(1)+"px"
 						});
@@ -2189,6 +2197,7 @@ if(localStorage.getItem("flag_blur")!= null)
 				for (var i = 0; i<limit; i++) {
 					$("#background .canvas").eq(i).css(
 						{
+              "transition-duration": transitionDuration+"s",
 							"left": (deltaX*(limit-i)*kLayer).toFixed(1)+"px",
 							"top": (deltaY*(limit-i)*kLayer).toFixed(1)+"px"
 						});
@@ -2200,8 +2209,11 @@ if(localStorage.getItem("flag_blur")!= null)
 
 	var f_mouseMove = null;
   $('body').mousemove( function (e) {
-		if (f_mouseMove == null)
-		{
+    console.log("mouse move");
+		if (f_mouseMove != null) {
+      f_mouseMove = null;
+    } else 	{
+    console.log("timer start");
 		f_mouseMove = setTimeout(function() {
 			paralax(e);
 			f_mouseMove = null;
