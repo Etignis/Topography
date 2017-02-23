@@ -78,7 +78,7 @@ if(localStorage.getItem("flag_blur")!= null)
 
   function make_generator(){
 
-		var generator="<a href='http://youknowwho.ru/dnd' class='bt'><i class='fa fa-home'></i></a><!--button class='bt' id='go'>Сгенерировать улицу</button--><button class='bt' id='town_name'>Сгенерировать название</button><!--button id='rnd' class='bt'>Перегенерировать</button--><a class='bt' href='http://www.youknowwho.ru/message/?theme=dndstreet' target='_blank'>Написать отзыв или предложение</a><a href='#' class='bt' id='config'><i class='fa fa-cog'></i></a>";
+		var generator="<a href='/' class='bt'><i class='fa fa-home'></i></a><!--button class='bt' id='go'>Сгенерировать улицу</button--><button class='bt' id='town_name'>Сгенерировать название</button><!--button id='rnd' class='bt'>Перегенерировать</button--><a class='bt' href='/message/?theme=dndstreet' target='_blank'>Написать отзыв или предложение</a><a href='#' class='bt' id='config'><i class='fa fa-cog'></i></a>";
     $("#panel").html(generator);
 
 
