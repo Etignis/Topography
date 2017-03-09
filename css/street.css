@@ -344,7 +344,7 @@ button img,
   right: 0;
   z-index: -1;
   background: #333;
-  background: url("../img/f1.jpg") center center;
+  background: url("../img/f2.jpg") center center;
   background-size: cover;
 }
 #background .canvas {
