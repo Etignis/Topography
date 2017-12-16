@@ -89,6 +89,68 @@
   -ms-user-select: none;
   user-select: none;
 }
+.customSelect {
+  padding: 0;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+  margin: 0;
+  position: relative;
+  font-size: 100%;
+}
+.customSelect .label {
+  padding-right: 2.2em !important;
+  position: relative;
+  padding: .5em .2em;
+  margin: 0em 0em;
+  text-transform: capitalize;
+}
+.customSelect .label:before {
+  content: "▼";
+  position: absolute;
+  right: .3em;
+  padding: 0 .2em;
+  transition: color .3s, background .3s;
+}
+.customSelect .label:after {
+  content: "";
+  position: absolute;
+  right: 1.7em;
+  top: .2em;
+  bottom: .2em;
+  border-left: 2px ridge #fff;
+}
+.customSelect .list {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 33;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 0 0 .2em .2em;
+  border: 1px solid #bbbbbb;
+  margin: 0 .2em;
+  padding: .2em 0;
+  box-shadow: 0 3px 10px 0px rgba(0, 0, 0, 0.3);
+  margin-top: .25em;
+}
+.customSelect .option {
+  color: #222;
+  cursor: pointer;
+  padding: .3em .2em;
+  list-style: none;
+  margin: 0;
+  text-align: left;
+  font-weight: 400;
+  font-size: 110%;
+  transition: color .3s, background .3s;
+}
+.customSelect .option:hover {
+  background: #cccccc;
+}
+.customSelect .option:not(:last-child) {
+  border-bottom: 1px solid #cccccc;
+}
 * {
   box-sizing: border-box;
 }
@@ -484,5 +546,3 @@ button img,
     text-align: left;
   }
 }
-
-/*# sourceMappingURL=street.css.map */
