@@ -149,6 +149,7 @@ function make_select(src, params) {
 	  $(this).closest(".customSelect").focusout();
 	  $(this).closest(".customSelect").blur();
 	  //$("#toFocus").focus();
+    updateHash();
 	});
 
   function make_generator(){
@@ -234,12 +235,27 @@ function make_select(src, params) {
       name = name.replace(re, '$1');
 		re = /^([уеыаоэяию])[уеыаоэяию]+/g;
       name = name.replace(re, '$1');
+		re = /^[^А-ЯЁа-яё]+/g;
+      name = name.replace(re, '');
+		re = /^.-+/g;
+      name = name.replace(re, '');
+      
+    name = name.replace(/^(нт|нс|нз|нж|нц)/, 'н');
+    name = name.replace(/^(рб)/, 'б');
+    name = name.replace(/^(тч|дз|рш)/, 'д');
+    name = name.replace(/^(рт|рг|лр|мч|рм)/, 'р');  
+    name = name.replace(/^(рп)/, 'п');    
+    name = name.replace(/^(нг)/, 'г');    
+    name = name.replace(/^(нч)/, 'ч');  
+      
 	  if (format == 'lowercase') {
       name = name.toLowerCase().trim();
 	  } else {
       
       //name = (name.charAt(0).toUpperCase() + name.substr(1).toLowerCase).trim();
-      name = name.split(/\b/).map(s => (s.charAt(0).toUpperCase() + s.substr(1).toLowerCase()).replace(/\s+/g, " ")).join("")
+     // name = name.split(/\b/).map(s => (s.charAt(0).toUpperCase() + s.substr(1).toLowerCase()).replace(/\s+/g, " ")).join("")
+      name = name.toLowerCase().split(/([\s'’-])/g).map(function(s) { if(/[а-я].test(s)/){ return s.charAt(0).toUpperCase() + s.substr(1).toLowerCase().replace(/\s+/g, " ")} return s}).join("");
+      
 	  }
 	  return name;
 	}
@@ -285,7 +301,7 @@ function make_dict (oToponims) {
 					  }
 					  
 					  if(/'/.test(tmp_s) || section.name == "customList")
-						  debugger;
+						  //debugger;
 
 						//[А-ЯЁа-яё]
 					  if (/^([А-ЯЁ]+)|([А-ЯЁа-яё]+')/.test(tmp_s)) {
@@ -371,19 +387,19 @@ function generate_word(source) {
     var arr = shuffle(source.l.split(separator));
     name = arr[0].trim();
   } else {
-  var maxLength = randd(0,4);
-	name = getFr(shuffle(source.end));
+    var maxLength = randd(0,6);
+    name = getFr(shuffle(source.end));
 
-  for (var q=0; q<maxLength; q++) {
-		var tmp = "";
-		for (var w=0; w<3 && tmp.length < 1; w++){
-			sh = shuffle(source.mid);
-			tmp = getSim(name, sh, 2);
-		}
-    name = tmp + name;
-  }
-  sh = shuffle(source.st)
-  name = fixName(getSim(name, sh, 2) + name);
+    for (var q=0; q<maxLength; q++) {
+      var tmp = "";
+      for (var w=0; w<3 && tmp.length < 1; w++){
+        sh = shuffle(source.mid);
+        tmp = getSim(name, sh, 2);
+      }
+      name = tmp + name;
+    }
+    sh = shuffle(source.st)
+    name = fixName(getSim(name, sh, 2) + name);
   }
   return name;
 }
@@ -396,6 +412,18 @@ function make_name(src, section, subsection) {
 			for (var t2 in src.l[t1].list) {
 				if (src.l[t1].list[t2].name == subsection) {
 					var cur = src.l[t1].list[t2];
+          
+          // multiply schemes if need
+          var schemes = [];
+          cur.schemes.forEach(function(el) {
+            var p = el.match(/{{(\d+)\b}}/);
+            var max = p? p[1] : 1;
+            var str = el.replace(/\s*{{\s*\d+\s*}}\s*/, "");
+            for(var i=0; i<max; i++){
+              schemes.push(str);
+            }
+          });
+          
 					var schemes = shuffle(cur.schemes);
 					var schema = schemes[0];
 					var name_arr = schema.split(" ");
@@ -405,18 +433,23 @@ function make_name(src, section, subsection) {
 							if(source[j].name==name_arr[i]) {
 								if (source[j].random? randd(0,source[j].random)==0 : 1) {
 									word = generate_word(source[j]);
-									for ( var m=5;
-										m>0 && (
-										word.length<3 ||
-										word.length<4 &&
-										/[БВГДЖЗКЛМНПРСТФХЦЧЩШЪЬ]{2,}/i.test(word) ||
-															word.length>3 &&
-															/[БВГДЖЗКЛМНПРСТФХЦЧЩШЪЬ]{3,}/i.test(word) ||
-										word.match(/[УЕЫАОЭЯИЮЯ]/gi).length<2);
-										m--
-  									){
-										word = generate_word(source[j]);
-									}
+                  try{ 
+                    for ( var m=5;
+                      m>0 && (
+                      word.length<3 ||
+                      word.length<4 &&
+                      /[БВГДЖЗКЛМНПРСТФХЦЧЩШЪЬ]{2,}/i.test(word) ||
+                      word.length>3 &&
+                      /[БВГДЖЗКЛМНПРСТФХЦЧЩШЪЬ]{3,}/i.test(word) ||
+                      word.match(/[УЕЫАОЭЯИЮЯ]/gi).length<1);
+                      m--
+                      ){
+                      word = generate_word(source[j]);
+                    }
+                  } catch(err) {
+                    console.log("[ERROR] word: "+word);
+                    word = generate_word(source[j]);
+                  }
                    var prefix = source[j].hasOwnProperty('prefix')? source[j].prefix : "";
                    var postfix = source[j].hasOwnProperty('postfix')? source[j].postfix : " ";
                       //sResultString+= prefix+ word +postfix
@@ -2582,11 +2615,53 @@ function isGoodWidth(){
 		}
 	});
 
+  // url filters
+	function updateHash() {		
+		// select
+		var sLoc = $("#settlementsListSelect .label").attr("data-selected-key");
+		var aFilters = [];
+		if(sLoc && sLoc.length > 0) {
+			aFilters.push("loc="+sLoc.replace(/\s+/g, "_"));
+		}
+		
+
+		if(aFilters.length>0) {
+			var sHash = aFilters.join("&");
+			window.location.hash = sHash;
+		} else {
+			removeHash();
+		}
+	}
+  function getHash(oParams){
+    //$('html, body').animate({scrollTop:0}, 'fast');
+
+    var sHash = window.location.hash.slice(1); // /topography#loc=rus
+    if(oParams || sHash && !/[^А-Яа-яЁё\w\d\/&\[\]?|,_=-]/.test(sHash)) {
+      var sLoc = sHash.match(/\bloc=([\w]+)/);
+      
+
+      if(sLoc && sLoc[1]) {
+      	$("#settlementsListSelect .label").attr("data-selected-key", sLoc[1]).html($("#settlementsListSelect li[data-key='"+sLoc[1]+"']").text().replace(/[_]+/g," "));
+      }
+    
+    } else {
+      removeHash();
+      //hideClerFilter();
+    }
+    //$("body").css("border-top", "1px solid red");
+    $("#town_name").click();
+  }
+
+  function removeHash() {
+    history.pushState("", document.title, window.location.pathname + window.location.search);
+    return false;
+  }
   
   // обрабатываем названия и получаем словарь
 	make_dict(oToponims) ;
 	
   make_generator();
-  $("#town_name").click();
+  getHash();
+ // $("#town_name").click();
   
 });
