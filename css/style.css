@@ -375,6 +375,19 @@ button:hover {
     margin: .6em 0;
     text-align: center;
   }
+  #panel .customSelect {
+    display: block;
+  }
+  #panel .customSelect .list {
+    position: fixed;
+    top: 1em;
+    left: 1em;
+    right: 1em;
+    background: white;
+  }
+  #panel .customSelect .list li {
+    font-size: 120%;
+  }
 }
 .m_head {
   font-weight: bold;
