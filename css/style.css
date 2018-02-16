@@ -259,8 +259,9 @@ button:hover {
   padding-bottom: .2em;
 }
 #panel .bt {
-  min-width: 1em;
-  min-height: 1em;
+  text-align: center;
+  min-width: 2.2em;
+  min-height: 2.2em;
   display: inline-block;
   padding: .4em;
   cursor: pointer;
@@ -453,7 +454,7 @@ button img,
   border-top-width: 0px;
   display: table;
   font-size: 140%;
-  margin: 1em;
+  margin: 1em auto;
   background: white;
   padding: 1em;
 }
@@ -462,6 +463,39 @@ button img,
 }
 .center {
   text-align: center;
+}
+div#info {
+  -webkit-border-radius: 3px 3px 3px 3px;
+  -moz-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
+  overflow: visible;
+  background: #fff;
+  border: 0px solid #d8d8d8;
+  border-bottom-width: 2px;
+  border-top-width: 0px;
+  max-width: 40rem;
+  padding: 1rem;
+  margin: 1em auto;
+  background: #ffffffee;
+  position: relative;
+}
+div#info p {
+  font-size: 120%;
+}
+div#info .cross {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  color: #ddd;
+  transition: color .2s;
+}
+div#info .cross:hover {
+  color: #222;
+}
+div#info .cross:before {
+  content: "✖";
+  font-size: 200%;
 }
 #milepost {
   font-size: 40px;

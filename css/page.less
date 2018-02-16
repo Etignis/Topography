@@ -58,7 +58,7 @@ button img, .i-qw, .i-rf{
     .frame(1px);
     display: table;
     font-size: 140%;
-    margin: 1em;
+    margin: 1em auto;
     background: white;
     padding: 1em;
     label{
@@ -67,6 +67,37 @@ button img, .i-qw, .i-rf{
 }
 .center{
     text-align: center;
+}
+
+div#info{
+	.frame();
+	max-width: 40rem;
+	padding: 1rem;
+	margin: 1em auto;	
+	background: #ffffffee;
+	position: relative;
+	
+	p{
+		font-size: 120%
+	}
+	
+	.cross{
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		cursor: pointer;
+		color: @l-gray;
+		transition: color .2s;
+		
+		&:hover{
+			color: @d-gray;
+		}
+		
+		&:before{
+			content: "✖";
+			font-size: 200%;
+		}
+	}
 }
 
 #milepost{

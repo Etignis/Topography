@@ -155,9 +155,14 @@ function make_select(src, params) {
   function make_generator(){
     var Arr = oToponims.l.filter(x => x.name=="villages")[0].list;
     var Select = select = make_select(Arr, {selected_key: "slav", id: "settlementsListSelect", class: "bt"});;
-		var generator="<a href='/' class='bt'><i class='fa fa-home'></i></a><!--button class='bt' id='go'>Сгенерировать улицу</button--><button class='bt' id='town_name'>Сгенерировать название</button>"+Select+"<!--button id='rnd' class='bt'>Перегенерировать</button--><a class='bt' href='/message/?theme=dndstreet' target='_blank'>Написать отзыв или предложение</a><a href='#' class='bt' id='config'><i class='fa fa-cog'></i></a>";
+		var generator="<a href='/' class='bt'><i class='fa fa-home'></i></a><!--button class='bt' id='go'>Сгенерировать улицу</button--><button class='bt' id='town_name'>Сгенерировать название</button>"+Select+"<!--button id='rnd' class='bt'>Перегенерировать</button--><a class='bt' href='/message/?theme=dndstreet' target='_blank'>Написать отзыв или предложение</a> <a href='#' class='bt' id='config'> <i class='fa fa-cog'></i> </a><a href='#' class='bt' id='show_info'> <i class='fa fa-question-circle'></i> </a>";
     $("#panel").html(generator);
 
+	// INFO WIN
+	$("#info").append("<span class='cross' id='close_info'></span>");
+	if(localStorage.getItem("topographyInfoIsShown")){
+		$("#info").hide();
+	}
 
     makeSettingWin();
 	}
@@ -2483,22 +2488,30 @@ function isGoodWidth(){
 	  show_milepost(getSettlementName(), 'result');
   });
   
-
-  $("body").on("click", "#info", function(){
-    if($("#dbg").length<1)
-    {
-      $("body").append("<div id='dbg'></div>");
-    }
-    $("#dbg").show();
-    if($(".mod_win").length<1)
-    {
-      $("body").append("<div class='mod_win'></div>");
-    }
-    $(".mod_win").show();
-
-
-    $(".mod_win").html(info);
+  $("body").on('click', "#close_info", function(){
+	  $("#info").slideUp();
+	  localStorage.setItem("topographyInfoIsShown", true);
   });
+  $("body").on('click', "#show_info", function(){
+	  $("#info").slideDown();
+	  return false;
+  });
+
+  // $("body").on("click", "#info", function(){
+    // if($("#dbg").length<1)
+    // {
+      // $("body").append("<div id='dbg'></div>");
+    // }
+    // $("#dbg").show();
+    // if($(".mod_win").length<1)
+    // {
+      // $("body").append("<div class='mod_win'></div>");
+    // }
+    // $(".mod_win").show();
+
+
+    // $(".mod_win").html(info);
+  // });
   $("body").on("click", "#dbg", function(){
     $("#dbg").hide();
     $(".mod_win").hide();
