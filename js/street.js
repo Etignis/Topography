@@ -159,7 +159,7 @@ function make_select(src, params) {
     $("#panel").html(generator);
 
 	// INFO WIN
-	$("#info").append("<span class='cross' id='close_info'></span>");
+	$("#info .content").append("<span class='cross' id='close_info'></span>");
 	if(localStorage.getItem("topographyInfoIsShown")){
 		$("#info").hide();
 	}
@@ -176,7 +176,7 @@ function make_select(src, params) {
           //console.log(f[prop].name + ": "+ f[prop].val);
         }
 
-        var configWin="<div id='confWin' style='display: none'><div class='cont'>"+inputs+"</div><div class='center'><button id='bConfOk'>OK</button></div></div>";
+        var configWin="<div  id='confWin' class='center_wrapper dbg' style='display: none'><div class='content' ><div class='cont'>"+inputs+"</div><div class='center'><button id='bConfOk'>OK</button></div></div></div>";
         if($("#confWin").length<1)
             $("body").append(configWin);
         else
@@ -2497,21 +2497,6 @@ function isGoodWidth(){
 	  return false;
   });
 
-  // $("body").on("click", "#info", function(){
-    // if($("#dbg").length<1)
-    // {
-      // $("body").append("<div id='dbg'></div>");
-    // }
-    // $("#dbg").show();
-    // if($(".mod_win").length<1)
-    // {
-      // $("body").append("<div class='mod_win'></div>");
-    // }
-    // $(".mod_win").show();
-
-
-    // $(".mod_win").html(info);
-  // });
   $("body").on("click", "#dbg", function(){
     $("#dbg").hide();
     $(".mod_win").hide();
@@ -2534,11 +2519,11 @@ function isGoodWidth(){
     // показать настройки
 	$("body").on("click", "#config", function(){
     //getSettings();
-    makeSettingWin();
+		makeSettingWin();
 		$("#confWin").fadeToggle();
 	});
 	$("body").on("click", "#bConfOk", function(){
-		$(this).parent().parent().fadeOut();
+		$(this).parent().parent().parent().fadeOut();
 	});
 
 	$("body").on("click", "#confWin input", function(){
