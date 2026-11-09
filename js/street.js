@@ -1814,114 +1814,104 @@ function isGoodWidth(){
 						}
 						if(width === undefined)
 							width = 50;
-						var root = ~~(width/2.2);
-						var pnt = new point();
 
-						function make_trunk_up(get_point){
-							var to_point = new point();
-							var br = 20-randd(-10,10, randomSeed/get_point.x);
-							var tr_height = 130-randd(-50,50, randomSeed/get_point.y);
-							var new_p = new point();
+						// Trunk formed from a single symmetric closed outline, like the template:
+						// a slim vertical column (narrow at the top) that flares to a wide base,
+						// with short paired branch stubs sticking out on BOTH sides at several levels.
+						// Everything is drawn on the same canvas (layer === layerTree).
+						var topY = 6;
+						var baseY = basis.y;
+						var H = Math.max(baseY - topY, 40);
+						var halfTop = Math.max(5, ~~(width / 4));
+						// top:bottom width ratio ~1.3, allowed to vary within 1.0–1.7
+						var taper = 1 + randd(0, 70) / 100;
+						var halfBase = Math.max(halfTop + 2, ~~(halfTop * taper));
+						var baseStubLen = ~~(width * 0.7) + 10;
+						var stubUp = 5;					// how far above the node the top edge attaches
+						var stubDn = 18;					// how far below the node the long underside returns
+						var stubLift = 11;					// how far the outer tip rises above the node
 
-							new_p.x = get_point.x;
-							new_p.y = get_point.y - tr_height;
-							layerTree.lineTo(new_p.x, new_p.y);
-							new_p.x = new_p.x-br;
-							new_p.y = new_p.y-br;
-							layerTree.lineTo(new_p.x, new_p.y);
-							new_p.x = +new_p.x+ +br;
-							new_p.y = + new_p.y + +br/2;
-							layerTree.lineTo(new_p.x, new_p.y);
+						// Branches occupy only the upper 2/3 of the trunk.
+						var zoneF = 2 / 3;
 
-							if(new_p.y>0)
-								make_trunk_up(new_p);
-							else
-								return new_p;
+						// Per-tree branch spacing. The first gap is random (varies between trunks) and
+						// every following gap only gets a little larger (never smaller), so the branches
+						// thin out going down the trunk.
+						var step = H * randd(14, 28) / 100;
+						var stepGrow = 1 + randd(3, 10) / 100;
+
+						// Generate branch positions (fraction of trunk height, top -> down) within the
+						// upper 2/3. Upper branches are built smaller (k low) and grow toward the base.
+						var stubs = [];
+						var yF = zoneF * randd(8, 14) / 100;    // first branch just below the tip
+						var k = 0.8;                            // size scale, grows downward
+						var guard = 0;
+						while (yF <= zoneF + 1e-6 && guard < 12) {
+							guard++;
+							stubs.push({ f: yF, k: k });
+							yF += step / H;
+							step *= stepGrow;                   // non-decreasing gap
+							k = Math.min(1.2, k + 0.09);        // lower branches slightly larger
 						}
 
-						function make_trunk_down(get_point, end_point){
-							var to_point = new point();
-							var br = 20-randd(-10,10, randomSeed/get_point.y);
-							var tr_height = 130-randd(-50,50, randomSeed/get_point.x);
-							var new_p = new point();
-
-
-							new_p.x = + get_point.x + +br;
-							new_p.y = get_point.y - br/2;
-							layerTree.lineTo(new_p.x, new_p.y);
-							new_p.x = new_p.x - br;
-							new_p.y = +new_p.y + +br;
-							layerTree.lineTo(new_p.x, new_p.y);
-							new_p.x = new_p.x;
-							new_p.y = +new_p.y + +tr_height;
-							layerTree.lineTo(new_p.x, new_p.y);
-
-							if(new_p.y<basis.y - (+root+ +tr_height*1.5))
-								make_trunk_down(new_p);
-							else
-							{
-								//new_p.x = new_p.x;
-								new_p.y = basis.y-root;//+new_p.y + +tr_height;
-								layerTree.lineTo(new_p.x, new_p.y);
-								new_p.x = +new_p.x + +root;
-								new_p.y = +new_p.y + +root;
-								layerTree.lineTo(new_p.x, new_p.y);
-							}
-						}
-						function make_leafs (ls_p, ls_h) {
-							var l_p=new point();
-							var ls_w=500;
-							for (var i=0; i<11; i++) {
-								for (var j=0; j<6; j++) {
-									if(randd(0, 3)>i) {
-										//l_p.set(ls_p.x - (ls_h/2)/(i*0.4) + +ls_h/6*i/(i*0.4) - randd(-1,1)*i*15, ls_p.y + +ls_h/11*j)
-										var j_c = ~~((ls_w/6)* (j+1));
-										var k = ~~((i*0.6)+1);
-										l_p.set(ls_p.x -10 - (ls_w/2)/k + +(j_c)/k, ls_p.y + +(ls_h/11)*i - randd(3,3)/k);
-
-										make_leaf(l_p, 70);
-									}
-								}
-							}
+						// half-width of the trunk at a given height (linear taper, wider toward base)
+						function halfW(y) {
+							var t = (y - topY) / H;
+							return halfTop + (halfBase - halfTop) * Math.min(Math.max(t, 0), 1);
 						}
 
-						function make_leaf (l_p, l_w) {
-							l_p.set(l_p.x-randd(-10,10), l_p.y-randd(-30,30));
-							l_w = l_w - randd(-5,5)*3;
-							layer.beginPath();
-							layer.moveTo(l_p.x, l_p.y);
-							layer.lineTo(l_p.x-l_w/2, l_p.y + +l_w/2);
-							layer.lineTo(+l_p.x+ +l_w/2, l_p.y + +l_w/2);
-							layer.lineTo(l_p.x, l_p.y);
-							//ctx[0].body.stroke();
-							layer.fillStyle = rgba_change(main_color1, randd(-15,15), randd(10,10)*0.1, -randd(1,5)*3, randd(1,5)*3, -randd(1,5)*3);
-							layer.fill();
+						// build the full outline as a list of {x, y}, left side up then right side down.
+						// Each branch is a triangle wedge: short (near-horizontal) top edge to an outer
+						// raised tip, then a long diagonal underside back down to the trunk edge lower down.
+						var outline = [];
+						// left edge, bottom -> top
+						outline.push({ x: basis.x - halfBase, y: baseY });
+						var i;
+						for (i = stubs.length - 1; i >= 0; i--) {
+							var s = stubs[i];
+							var sy = topY + s.f * H;
+							var up = stubUp * s.k;
+							var dn = stubDn * s.k;
+							var lift = stubLift * s.k;
+							// lower attach on the trunk edge (long underside)
+							outline.push({ x: basis.x - halfW(sy + dn), y: sy + dn });
+							// outer raised tip
+							outline.push({ x: basis.x - halfW(sy) - s.k * baseStubLen, y: sy - lift });
+							// upper attach back on the trunk edge (short top edge)
+							outline.push({ x: basis.x - halfW(sy - up), y: sy - up });
 						}
+						outline.push({ x: basis.x - halfTop, y: topY }); // top-left
 
-						// solid tapered trunk body (drawn from top of screen down to the base)
+						// right edge, top -> bottom (mirror)
+						outline.push({ x: basis.x + halfTop, y: topY });
+						for (i = 0; i < stubs.length; i++) {
+							var s2 = stubs[i];
+							var sy2 = topY + s2.f * H;
+							var up2 = stubUp * s2.k;
+							var dn2 = stubDn * s2.k;
+							var lift2 = stubLift * s2.k;
+							// upper attach back on the trunk edge (short top edge)
+							outline.push({ x: basis.x + halfW(sy2 - up2), y: sy2 - up2 });
+							// outer raised tip
+							outline.push({ x: basis.x + halfW(sy2) + s2.k * baseStubLen, y: sy2 - lift2 });
+							// lower attach on the trunk edge (long underside)
+							outline.push({ x: basis.x + halfW(sy2 + dn2), y: sy2 + dn2 });
+						}
+						outline.push({ x: basis.x + halfBase, y: baseY });
+
+						// fill the whole outline as one shape
 						layer.beginPath();
-						var root_x1 = ~~(basis.x-width/2-root);
-						var root_y1 = basis.y;
-						pnt.set(basis.x, 0);
-						make_trunk_down(pnt, basis);
-						layer.lineTo(root_x1, root_y1);
+						layer.moveTo(outline[0].x, outline[0].y);
+						for (i = 1; i < outline.length; i++) {
+							layer.lineTo(outline[i].x, outline[i].y);
+						}
+						layer.closePath();
 
-						var tree = layer.createLinearGradient(0,0,0,basis.y);
-						tree.addColorStop(0, rgba_change(cl1, 10));
-						tree.addColorStop(.99, rgba_change(cl2, 30));
-						tree.addColorStop(1, rgba_change(cl2, 30, 0));
-						layer.fillStyle = tree;
+						var trunkGr = layer.createLinearGradient(0, topY, 0, baseY);
+						trunkGr.addColorStop(0, rgba_change(cl1, 25));
+						trunkGr.addColorStop(1, rgba_change(cl2, -6));
+						layer.fillStyle = trunkGr;
 						layer.fill();
-
-						// upper needles/branches: separate solid path anchored on the trunk centre
-						// so they always sit ON the trunk (never detached floating triangles)
-						layer.beginPath();
-						pnt.set(basis.x, basis.y - root);
-						make_trunk_up(pnt);
-						layer.fillStyle = rgba_change(cl1, 5);
-						layer.fill();
-						if(f_leafs==1)
-							make_leafs(pnt, 200);
 					}
 
 					var f_leafs = (randd(-1,1)>0)?1:0;
