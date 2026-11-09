@@ -73,6 +73,18 @@ function randd(min, max, seed) {
   return rnd;
 };
 
+// deterministic random int in [min,max] derived from randomSeed + salt.
+// Used for the landscape "theme" gates (day/night, desert, cave) which were
+// silently collapsing to a single value when driven by the seeded randd().
+function randi(min, max, salt) {
+  var s = ((randomSeed || 0) + (salt || 0) * 0x9E3779B9) >>> 0;
+  s ^= s << 13; s >>>= 0;
+  s ^= s >> 17;
+  s ^= s << 5;  s >>>= 0;
+  var span = max - min + 1;
+  return min + (s % span);
+}
+
 function rand_sign(){
   if(randd(0,99)>50)
     return 1;
@@ -960,7 +972,7 @@ function isGoodWidth(){
 				}
 
 				var i, main_color1, main_color2;
-				if(randd(0,2)>0)
+				if(randi(0,2,0)>0)
 				{
 					i = randd(0, ~~((colors_day.length-1)/2))*2;
 					main_color1 = rgba_change(colors_day[i], randd(-15,15));
@@ -975,8 +987,8 @@ function isGoodWidth(){
 					f_day=0;
 				}
 
-				if(randd(-3,1)>0) f_desert=1;
-				if(randd(-7,1)>0) f_cave=1;
+				if(randi(-3,1,1)>0) f_desert=1;
+				if(randi(-7,1,2)>0) f_cave=1;
 
 				//console.log("Выбрано: ["+i+"]"+"%c     " + "%c     ", "background: "+main_color1+";", "background: "+main_color2+";");
 
@@ -1791,6 +1803,10 @@ function isGoodWidth(){
 							layerTree = ctx[layerNumTree].body;
 						}
 
+						// bind the whole tree (trunk path, gradient fill and leaves)
+						// to the same canvas so the trunk is never orphaned from its fill
+						layer = layerTree;
+
 						if(basis === undefined)
 						{
 							basis = new point();
@@ -1882,23 +1898,27 @@ function isGoodWidth(){
 							layer.fill();
 						}
 
+						// solid tapered trunk body (drawn from top of screen down to the base)
 						layer.beginPath();
 						var root_x1 = ~~(basis.x-width/2-root);
 						var root_y1 = basis.y;
-						var root_x2 = ~~(basis.x-width/2);
-						var root_y2 = basis.y-root;
-						layer.moveTo(root_x1, root_y1);
-						layer.lineTo(root_x2, root_y2);
-						pnt.set(root_x2, root_y2);
-						make_trunk_up(pnt);
 						pnt.set(basis.x, 0);
 						make_trunk_down(pnt, basis);
+						layer.lineTo(root_x1, root_y1);
 
 						var tree = layer.createLinearGradient(0,0,0,basis.y);
 						tree.addColorStop(0, rgba_change(cl1, 10));
 						tree.addColorStop(.99, rgba_change(cl2, 30));
 						tree.addColorStop(1, rgba_change(cl2, 30, 0));
 						layer.fillStyle = tree;
+						layer.fill();
+
+						// upper needles/branches: separate solid path anchored on the trunk centre
+						// so they always sit ON the trunk (never detached floating triangles)
+						layer.beginPath();
+						pnt.set(basis.x, basis.y - root);
+						make_trunk_up(pnt);
+						layer.fillStyle = rgba_change(cl1, 5);
 						layer.fill();
 						if(f_leafs==1)
 							make_leafs(pnt, 200);
